@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BalanceWebApp.Model;
+using BalanceWebApp.Model.Dao.Dapper;
+using BalanceWebApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -28,7 +31,27 @@ namespace BalanceWebApp
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddLogging();
+            services.AddOptions();
             services.AddMvc();
+
+            services.Configure<AppSettings>(x => Configuration.GetSection("AppSettings").Bind(x));
+            
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(15);
+                options.CookieHttpOnly = true;
+            });
+
+            // Data repositories
+            services.AddSingleton<AccountTypeDao, AccountTypeDao>();
+
+            // Services
+            services.AddSingleton<AccountTypeService, AccountTypeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

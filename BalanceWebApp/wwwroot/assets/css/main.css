@@ -1,0 +1,13 @@
+#header {
+    margin-top: 3em;
+}
+
+#content {
+    margin-top: 3em;
+    margin-bottom: 1em;
+}
+
+.content-separator {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
