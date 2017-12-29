@@ -1,11 +1,11 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
-@model BalanceWebApp.Model.Views.AccountTypes.NewViewModel
+@model BalanceWebApp.Model.Views.AccountTypes.UpdateViewModel
 
 @{
-    ViewData["Title"] = "New Account Type";
+    ViewData["Title"] = "Update Account Type";
 }
 
-<div class="row">
+<div class="row" style="margin-top: 6em;">
     <div class="col-md-12">
         <h3>@ViewData["Title"]</h3>
 
@@ -16,17 +16,18 @@
             </div>
         }
 
-        <form method="post">
+        <form method="post" class="content-separator">
             @Html.AntiForgeryToken()
 
+            @Html.Hidden("Id", Model.Id)
+
             <div class="form-group">
-                <!-- <label for="name">Name</label>
-                <input type="text" name="name" placeholder="Name" class="form-control" value="" /> -->
-                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Name", @id = "name" })
+                <label for="name">Name</label>
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Name", @id = "name", @name="Name" })
                 @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class = "text-danger" })
             </div>
 
-            <input type="submit" class="btn btn-primary" value="Add" />
+            <input type="submit" class="btn btn-primary" value="Update" />
             @Html.ActionLink("Back", "Index", "AccountType", null, new { @class = "btn" })
         </form>
 

@@ -10,7 +10,7 @@ namespace BalanceWebApp.Controllers
     [Route("/account-types")]
     public class AccountTypeController : BaseController
     {
-        private AccountTypeService _accountTypeService;
+        private readonly AccountTypeService _accountTypeService;
 
         public AccountTypeController(ILogger<AccountTypeController> logger, AccountTypeService accountTypeService)
         {
@@ -59,6 +59,57 @@ namespace BalanceWebApp.Controllers
             return RedirectToAction("Index");
         }
 
+        [Route("{id}")]
+        public IActionResult Load(long id)
+        {
+            var result = _accountTypeService.GetAccountTypeById(id);
+
+            UpdateViewModel model;
+            
+            if (result.HasErrors())
+            {
+                model = new UpdateViewModel() {
+                    Message = result.GetFailure()
+                };
+
+                return View(model);
+            }
+            
+            model = new UpdateViewModel()
+            {
+                Id = id,
+                Name = result.GetPayload().Name
+            };
+
+            return View(model);
+        }
+
+        [Route("{id}")]
+        [HttpPost]
+        public IActionResult Update(UpdateViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Load", model);
+            }
+
+            var accountType = new AccountType()
+            {
+                Id = model.Id,
+                Name = model.Name
+            };
+
+            var result = _accountTypeService.UpdateAccountType(accountType);
+
+            if (result.HasErrors())
+            {
+                model.Message = result.GetFailure();
+                return View("Load", model);
+            }
+
+            return RedirectToAction("Index");
+        }
+        
         private IndexViewModel BuildErrorModel(string message)
         {
             return new IndexViewModel() {

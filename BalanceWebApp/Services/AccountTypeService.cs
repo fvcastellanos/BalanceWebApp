@@ -90,14 +90,14 @@ namespace BalanceWebApp.Services
             }
         }
 
-        public Result<Exception, AccountType> UpdateAccountType(AccountType accountType) {
+        public Result<string, AccountType> UpdateAccountType(AccountType accountType) {
             try {
                 _logger.LogInformation("Updating account type: {0}", accountType);
-                AccountType at = _accountTypeDao.Update(accountType);
-                return Result<Exception, AccountType>.ForSuccess(at);
+                var at = _accountTypeDao.Update(accountType);
+                return Result<string, AccountType>.ForSuccess(at);
             } catch(Exception ex) {
                 _logger.LogError("Unable to update account type with id: {0}, due: {1}", accountType, ex);
-                return Result<Exception, AccountType>.ForFailure(ex);
+                return Result<string, AccountType>.ForFailure("Can't update account type");
             }
             
         }
