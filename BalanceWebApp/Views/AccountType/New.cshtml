@@ -1,0 +1,33 @@
+@model BalanceWebApp.Model.Views.AccountTypes.NewViewModel
+
+@{
+    ViewData["Title"] = "New Account Type";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>@ViewData["Title"]</h3>
+
+        @if (Model.Message != null)
+        {
+            <div class="alert alert-danger content-separator">
+                @Model.Message
+            </div>
+        }
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <!-- <label for="name">Name</label>
+                <input type="text" name="name" placeholder="Name" class="form-control" value="" /> -->
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Name", @id = "name" })
+                @Html.ValidationMessageFor(model => model.Name, String.Empty, new { @class = "text-danger" })
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="Add" />
+            <a class="btn" asp-controller="AccountType" asp-action="Index">Back</a>
+        </form>
+
+    </div>
+</div>

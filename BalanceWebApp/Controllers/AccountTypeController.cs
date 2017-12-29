@@ -33,6 +33,32 @@ namespace BalanceWebApp.Controllers
             return View(model);
         }
 
+        [Route("new")]
+        public IActionResult New()
+        {
+            return View(new NewViewModel());
+        }
+
+        [Route("new")]
+        [HttpPost]
+        public IActionResult Save(NewViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("New", model);
+            }
+
+            var result = _accountTypeService.New(model.Name);
+
+            if (result.HasErrors())
+            {
+                model.Message = result.GetFailure();
+                return View("New", model);
+            }
+
+            return RedirectToAction("Index");
+        }
+
         private IndexViewModel BuildErrorModel(string message)
         {
             return new IndexViewModel() {

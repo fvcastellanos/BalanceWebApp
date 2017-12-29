@@ -8,16 +8,14 @@
     <div class="col-md-12">
         <h3>@ViewData["Title"]</h3>
 
-
-
-        <form method="post">
+        <!-- <form method="post">
             <div class="form-group">
                 <label for="url">URL</label>
                 <input type="text" name="url" placeholder="URL" class="form-control" value="" />
             </div>
 
             <input type="submit" class="btn btn-primary" value="Capture URL" />
-        </form>
+        </form> -->
 
         @if (Model.Message != null)
         {
@@ -25,5 +23,24 @@
                 @Model.Message
             </div>
         }
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.AccountTypes)
+                {
+                    <tr>
+                        <td><a href="/account-types/@item.Id">@item.Name</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <a class="btn btn-primary" asp-controller="AccountType" asp-action="New">New</a>
+
     </div>
 </div>
