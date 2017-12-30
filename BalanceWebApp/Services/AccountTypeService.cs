@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using BalanceWebApp.Model.Dao.Dapper;
 using BalanceWebApp.Model.Domain;
-using BalanceWebApp.Services;
 using Microsoft.Extensions.Logging;
 
 namespace BalanceWebApp.Services
@@ -41,9 +40,9 @@ namespace BalanceWebApp.Services
                 _logger.LogInformation("Getting Account Type for id: {0}", id);
                 var accountTypeHolder = _accountTypeDao.FindById(id);
                 
-                if (!accountTypeHolder.HasValue) return Result<string, AccountType>.ForFailure("Account type not found");
+                if (accountTypeHolder == null) return Result<string, AccountType>.ForFailure("Account type not found");
 
-                return Result<string, AccountType>.ForSuccess(accountTypeHolder.Value);
+                return Result<string, AccountType>.ForSuccess(accountTypeHolder);
 
             } catch(Exception ex)
             {
@@ -61,7 +60,7 @@ namespace BalanceWebApp.Services
 
                 var accountTypeHolder = _accountTypeDao.FindById(value);
                 
-                return Result<string, AccountType>.ForSuccess(accountTypeHolder.Value);
+                return Result<string, AccountType>.ForSuccess(accountTypeHolder);
             }
             catch(Exception ex)
             {

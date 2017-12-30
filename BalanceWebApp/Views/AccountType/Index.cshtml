@@ -1,5 +1,3 @@
-@using Microsoft.AspNetCore.Mvc.Rendering
-
 @model BalanceWebApp.Model.Views.AccountTypes.IndexViewModel
 
 @{
@@ -26,9 +24,10 @@
             </div>
         }
 
-        <table class="table table-striped content-separator">
+        <table class="table table-striped table-bordered content-separator">
             <thead>
                 <tr>
+                    <th></th>
                     <th>Name</th>
                 </tr>
             </thead>
@@ -36,8 +35,8 @@
                 @foreach (var item in Model.AccountTypes)
                 {
                     <tr>
-                        <td><a href="/account-types/@item.Id">@item.Name</a></td>
-@*                        <td>@Html.ActionLink(@item.Name, "Load", "AccountType")</td>*@
+                        <td><a href="/account-types/@item.Id"><img src="/assets/img/svg/pencil.svg" alt="pencil" class="img-edit"></a></td>
+                        <td>@item.Name</td>
                     </tr>
                 }
             </tbody>

@@ -1,0 +1,47 @@
+﻿@model BalanceWebApp.Model.Views.TransactionTypes.IndexViewModel
+
+@{
+    ViewData["Title"] = "Transaction Types";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>@ViewData["Title"]</h3>
+
+        @if (Model.Message != null)
+        {
+            <div class="alert alert-danger content-separator">
+                @Model.Message
+            </div>
+        }
+
+        <table class="table table-striped content-separator">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.TransactionTypes)
+            {
+                var type = "Debit";
+                if (item.Credit)
+                {
+                    type = "Credit";
+                }
+                
+                <tr>
+                    <td><a href="/transaction-types/@item.Id"><img src="/assets/img/svg/pencil.svg" alt="pencil" class="img-edit"></a></td>
+                    <td>@item.Name</td>
+                    <td>@type</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        <a class="btn btn-primary" asp-controller="TransactionType" asp-action="New">New</a>
+
+    </div>
+</div>

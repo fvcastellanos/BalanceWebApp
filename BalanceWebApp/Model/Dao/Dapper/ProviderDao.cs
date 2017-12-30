@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using BalanceWebApp.Model.Domain;
 using Dapper;
-using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -42,19 +41,19 @@ namespace BalanceWebApp.Model.Dao.Dapper
             }
         }
 
-        public Optional<Provider> GetById(long id)
+        public Provider GetById(long id)
         {
             using (var db = GetConnection())
             {
-                return new Optional<Provider>(db.Query<Provider>(GET_BY_ID, new { Id = id }).SingleOrDefault());                
+                return db.Query<Provider>(GET_BY_ID, new { Id = id }).SingleOrDefault();                
             }
         }
 
-        public Optional<Provider> FindProvider(string name, string country)
+        public Provider FindProvider(string name, string country)
         {
             using (var db = GetConnection())
             {
-                return new Optional<Provider>(db.Query<Provider>(FIND_PROVIDER, new { Name = name, Country = country }).SingleOrDefault());                
+                return db.QuerySingleOrDefault<Provider>(FIND_PROVIDER, new { Name = name, Country = country });                
             }
         }
 
@@ -76,7 +75,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
         public Provider Update(Provider provider) {
             GetConnection().Execute("update provider set name = @Name, country = @Country where id = @Id",
                 new {provider.Name, provider.Country, provider.Id });
-            return GetById(provider.Id).Value;
+            return GetById(provider.Id);
         }
     }
 }
