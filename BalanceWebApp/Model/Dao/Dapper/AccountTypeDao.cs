@@ -16,7 +16,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
         public AccountTypeDao(IOptions<AppSettings> settings, 
             ILogger<AccountTypeDao> logger) : base(settings, logger)
         {
-            this._logger = logger;
+            _logger = logger;
         }
 
         public List<AccountType> FindAll()
@@ -33,36 +33,36 @@ namespace BalanceWebApp.Model.Dao.Dapper
             }
         }
 
-        public Optional<AccountType> FindById(long id)
+        public AccountType FindById(long id)
         {
             try
             {
                 _logger.LogInformation("Getting account type with Id: {0}", id);
-                var accountType = GetConnection().Query<AccountType>("select id, name from account_type " +
-                                                                     " where id = @Id", new { Id = id }).SingleOrDefault<AccountType>(); 
-                return new Optional<AccountType>(accountType);
+                var accountType = GetConnection().QuerySingleOrDefault<AccountType>("select id, name from account_type " +
+                                                                     " where id = @Id", new { Id = id }); 
+                return accountType;
             }
             catch(Exception ex)
             {
                 _logger.LogError("Unable to perform the query", ex);
-                throw ex;
+                throw;
             }
         }
 
-        public Optional<AccountType> FindByName(string name)
+        public AccountType FindByName(string name)
         {
             try
             {
                 _logger.LogInformation("Getting account type with name: {0}", name);
-                var accountType = GetConnection().Query<AccountType>("select id, name from account_type " +
-                    " where name = @Name", new { Name = name }).SingleOrDefault<AccountType>();
+                var accountType = GetConnection().QuerySingleOrDefault<AccountType>("select id, name from account_type " +
+                    " where name = @Name", new { Name = name });
                 
-                return new Optional<AccountType>(accountType);
+                return accountType;
             }
             catch (Exception ex)
             {
                 _logger.LogError("Unable to perform the query", ex);
-                throw ex;
+                throw;
             }
         }
 
@@ -77,7 +77,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
                 return id;
             } catch(Exception ex) {
                 _logger.LogError("Unable to create an account type of name: {0}", name);
-                throw ex;
+                throw;
             }
         }
 
@@ -87,7 +87,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
                 return rows;
             } catch(Exception ex) {
                 _logger.LogError("Unable to delete account type with id: {0}", id);
-                throw ex;
+                throw;
             }
         }
 
@@ -96,13 +96,11 @@ namespace BalanceWebApp.Model.Dao.Dapper
                 GetConnection().Execute("update account_type set name = @Name where id = @Id", 
                     new { Name = accountType.Name, Id = accountType.Id });
 
-                return FindById(accountType.Id).Value;
+                return FindById(accountType.Id);
             } catch(Exception ex) {
                 _logger.LogError("Unable to update account type due: {0}", ex.Message);
-                throw ex;
+                throw;
             }
         }
-
-
     }
 }
