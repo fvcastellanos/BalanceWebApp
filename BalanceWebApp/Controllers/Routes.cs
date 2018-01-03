@@ -8,6 +8,7 @@
         public const string New = "new";
         
         // Controller routes
+        public const string Accounts = "/accounts";
         public const string AccountTypes = "/account-types";
         public const string Providers = "/providers";
         public const string ScheduledTransactions = "/scheduled-transactions";

@@ -4,7 +4,6 @@ using BalanceWebApp.Model.Views;
 using BalanceWebApp.Model.Views.TransactionTypes;
 using BalanceWebApp.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using static BalanceWebApp.Controllers.Routes;
 
