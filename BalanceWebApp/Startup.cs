@@ -52,12 +52,14 @@ namespace BalanceWebApp
             services.AddSingleton<ProviderDao, ProviderDao>();
             services.AddSingleton<TransactionTypeDao, TransactionTypeDao>();
             services.AddSingleton<AccountDao, AccountDao>();
+            services.AddSingleton<TransactionDao, TransactionDao>();
 
             // Services
             services.AddSingleton<AccountTypeService, AccountTypeService>();
             services.AddSingleton<ProviderService, ProviderService>();
             services.AddSingleton<TransactionTypeService, TransactionTypeService>();
             services.AddSingleton<AccountService, AccountService>();
+            services.AddSingleton<TransactionService, TransactionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

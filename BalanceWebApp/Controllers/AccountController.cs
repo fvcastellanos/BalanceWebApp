@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BalanceWebApp.Model.Domain;
+using BalanceWebApp.Model.Views;
 using BalanceWebApp.Model.Views.Accounts;
 using BalanceWebApp.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,7 @@ namespace BalanceWebApp.Controllers
         public AccountController(AccountService accountService, 
             ProviderService providerService, 
             AccountTypeService accountTypeService, 
+            TransactionTypeService transactionTypeService,
             ILogger<AccountController> logger)
         {
             _accountService = accountService;
@@ -58,7 +60,6 @@ namespace BalanceWebApp.Controllers
 
             return View(model);
         }
-
 
         [HttpPost]
         [Route(Routes.New)]
@@ -137,15 +138,14 @@ namespace BalanceWebApp.Controllers
 
             return RedirectToAction("Index");
         }
-
+        
         private NewViewModel BuildNewViewModel()
         {
             return new NewViewModel()
             {
                 Providers = GetProviders(),
                 AccountTypes = GetAccountTypes()
-            };
-            
+            };            
         }
 
         private UpdateViewModel BuildUpdateViewModel(long id)
@@ -158,34 +158,34 @@ namespace BalanceWebApp.Controllers
             };
         }
 
-        private IList<Item> GetProviders()
+        private IEnumerable<Option> GetProviders()
         {
             var result = _providerService.GetAll();
 
             if (result.IsSuccess())
             {
                 var list = from p in result.GetPayload()
-                    select new Item(p.Id.ToString(), p.Country + " - " + p.Name);
+                    select new Option(p.Id.ToString(), p.Country + " - " + p.Name);
 
                 return list.ToList();
             }
             
-            return new List<Item>();
+            return new List<Option>();
         }
 
-        private IList<Item> GetAccountTypes()
+        private IEnumerable<Option> GetAccountTypes()
         {
             var result = _accountTypeService.GetAccountTypes();
 
             if (result.IsSuccess())
             {
                 var list = from at in result.GetPayload()
-                    select new Item(at.Id.ToString(), at.Name);
+                    select new Option(at.Id.ToString(), at.Name);
 
                 return list.ToList();
             }
 
-            return new List<Item>();
+            return new List<Option>();
         }
     }
 }

@@ -12,7 +12,15 @@
     margin-bottom: 0.5em;
 }
 
+.content-separator-bottom {
+    margin-bottom: 2em;
+}
+
 .img-edit {
     height: 16px;
     width: 16px;
+}
+
+.img-margin-left {
+    margin-left: 0.5em;
 }

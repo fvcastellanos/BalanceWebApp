@@ -20,8 +20,8 @@ namespace BalanceWebApp.Model.Views.Accounts
         [Required]
         public long ProviderId { get; set; }
         
-        public IEnumerable<Item> Providers { get; set; }
+        public IEnumerable<Option> Providers { get; set; }
         
-        public IEnumerable<Item> AccountTypes { get; set; }
+        public IEnumerable<Option> AccountTypes { get; set; }
     }
 }
