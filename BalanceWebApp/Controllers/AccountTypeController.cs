@@ -4,10 +4,11 @@ using BalanceWebApp.Model.Views.AccountTypes;
 using BalanceWebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using static BalanceWebApp.Controllers.Routes;
 
 namespace BalanceWebApp.Controllers
 {
-    [Route("/account-types")]
+    [Route(AccountTypes)]
     public class AccountTypeController : BaseController
     {
         private readonly AccountTypeService _accountTypeService;
@@ -33,13 +34,13 @@ namespace BalanceWebApp.Controllers
             return View(model);
         }
 
-        [Route("new")]
+        [Route(Routes.New)]
         public IActionResult New()
         {
             return View(new NewViewModel());
         }
 
-        [Route("new")]
+        [Route(Routes.New)]
         [HttpPost]
         public IActionResult Save(NewViewModel model)
         {

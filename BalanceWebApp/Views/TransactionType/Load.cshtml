@@ -1,8 +1,8 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
-@model BalanceWebApp.Model.Views.TransactionTypes.NewViewModel
+@model BalanceWebApp.Model.Views.TransactionTypes.UpdateViewModel
 
 @{
-    ViewData["Title"] = "New Transaction Type";
+    ViewData["Title"] = "Update Transaction Type";
 }
 
 <div class="row">
@@ -19,6 +19,8 @@
         <form method="post">
             @Html.AntiForgeryToken()
 
+            @Html.Hidden("Id", Model.Id)
+            
             <div class="form-group">
                 <label for="name">Name</label>
                 @Html.TextBoxFor(model => model.Name, new {@class = "form-control", @placeholder = "Name", @name = "name"})
@@ -31,7 +33,7 @@
                 @Html.ValidationMessageFor(model => model.Type, string.Empty, new {@class = "text-danger"})
             </div>
         
-            <input type="submit" class="btn btn-primary" value="Add" />
+            <input type="submit" class="btn btn-primary" value="Update" />
             @Html.ActionLink("Back", "Index", "TransactionType", null, new { @class = "btn" })
         </form>
 

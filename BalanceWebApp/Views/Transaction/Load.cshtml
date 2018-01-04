@@ -1,0 +1,65 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model BalanceWebApp.Model.Views.Transactions.UpdateViewModel
+
+@{
+    ViewData["Title"] = "Update Transaction";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>@ViewData["Title"]</h3>
+
+        @if (Model.Message != null)
+        {
+            <div class="alert alert-danger content-separator">
+                @Model.Message
+            </div>
+        }
+
+        <p>
+            Account Name: @Model.AccountName
+            <br/>
+            Account Number: @Model.AccountNumber
+        </p>
+        
+        <form method="post" class="content-separator-bottom">
+            @Html.AntiForgeryToken()
+
+            @Html.Hidden("Id", Model.Id)
+
+            <div class="form-group">
+                <label for="transaction-type">Transaction Type</label>
+                @Html.DropDownListFor(model => model.TransactionTypeId, new SelectList(Model.Options, "Value", "Text"), new { @class = "form-control", @name="transaction-type" })
+                @Html.ValidationMessageFor(model => model.TransactionTypeId, string.Empty, new {@class = "text-danger"})
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date</label>
+                @Html.TextBoxFor(model => model.Date, "{0:yyyy-MM-dd}", new {@class = "form-control", @placeholder = "Date", @name = "date", @type="date"})
+                @Html.ValidationMessageFor(model => model.Date, string.Empty, new {@class = "text-danger"})
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                @Html.TextBoxFor(model => model.Description, new {@class = "form-control", @placeholder = "Description", @name = "description"})
+                @Html.ValidationMessageFor(model => model.Description, string.Empty, new {@class = "text-danger"})
+            </div>
+
+            <div class="form-group">
+                <label for="currency">Currency</label>
+                @Html.TextBoxFor(model => model.Currency, new {@class = "form-control", @placeholder = "Currency", @name = "currency"})
+                @Html.ValidationMessageFor(model => model.Currency, string.Empty, new {@class = "text-danger"})
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                @Html.TextBoxFor(model => model.Amount, new {@class = "form-control", @placeholder = "Amount", @name = "amount", @type="number"})
+                @Html.ValidationMessageFor(model => model.Amount, string.Empty, new {@class = "text-danger"})
+            </div>
+            
+            <input type="submit" class="btn btn-primary" value="Update" />
+            @Html.ActionLink("Back", "Index", "Transaction", null, new { @class = "btn" })
+        </form>
+
+    </div>
+</div>    

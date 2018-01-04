@@ -4,11 +4,11 @@ using BalanceWebApp.Model.Views.Providers;
 using BalanceWebApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mysqlx.Crud;
+using static BalanceWebApp.Controllers.Routes;
 
 namespace BalanceWebApp.Controllers
 {
-    [Route("/providers")]
+    [Route(Providers)]
     public class ProviderController : BaseController
     {
         private readonly ILogger _logger;
@@ -46,13 +46,13 @@ namespace BalanceWebApp.Controllers
             return View(model);
         }
 
-        [Route("new")]
+        [Route(Routes.New)]
         public IActionResult New()
         {
             return View(new NewViewModel());
         }
 
-        [Route("new")]
+        [Route(Routes.New)]
         [HttpPost]
         public IActionResult Save(NewViewModel model)
         {

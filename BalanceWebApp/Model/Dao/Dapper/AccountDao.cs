@@ -40,7 +40,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
             }
         }
 
-        public Optional<Account> GetById(long id)
+        public Account GetById(long id)
         {
             try 
             {
@@ -54,7 +54,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
                 _logger.LogInformation("Getting account with id: {0}", id);
                 var account = GetConnection().Query<Account>(query, new { Id = id }).SingleOrDefault<Account>();
 
-                return new Optional<Account>(account);
+                return account;
             }
             catch(Exception ex)
             {
@@ -63,7 +63,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
             }
         }
 
-        public Optional<Account> GetByAccountNumber(string number)
+        public Account GetByAccountNumber(string number)
         {
             try 
             {
@@ -77,7 +77,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
                 _logger.LogInformation("Getting account with number: {0}", number);
                 var account = GetConnection().Query<Account>(query, new { Number = number }).SingleOrDefault<Account>();
 
-                return new Optional<Account>(account);
+                return account;
             }
             catch(Exception ex)
             {
@@ -86,7 +86,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
             }
         }
 
-        public Optional<Account> GetAccount(long accountTypeId, long providerId, string accountNumber)
+        public Account GetAccount(long accountTypeId, long providerId, string accountNumber)
         {
             try 
             {
@@ -101,7 +101,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
                 var account = GetConnection().Query<Account>(query, new { Number = accountNumber, AccountTypeId = accountTypeId, ProviderId = providerId })
                         .SingleOrDefault<Account>();
 
-                return new Optional<Account>(account);
+                return account;
             }
             catch(Exception ex)
             {
