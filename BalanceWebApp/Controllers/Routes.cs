@@ -6,6 +6,7 @@
         
         // Common routes
         public const string New = "new";
+        public const string Delete = "delete";
         
         // Controller routes
         public const string Accounts = "/accounts";

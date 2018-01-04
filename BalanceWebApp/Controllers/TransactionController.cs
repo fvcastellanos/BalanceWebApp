@@ -182,6 +182,22 @@ namespace BalanceWebApp.Controllers
 
             return RedirectToAction("Index");
         }
+
+        [Route("{accountId}" + Transactions + "/{id}/" + Routes.Delete)]
+        public IActionResult Delete(long accountId, long id)
+        {
+            var model = BuildTransactionModel(accountId, null, null);
+            
+            var result = _transactionService.Delete(id);
+
+            if (result.HasErrors())
+            {
+                model.Message = result.GetFailure();
+                return View("Index", model);
+            }
+
+            return RedirectToAction("Index");
+        }
                 
         private IndexViewModel BuildTransactionModel(long accountId, DateTime ? start, DateTime  ? end)
         {
