@@ -2,7 +2,12 @@
 {
     public class Routes
     {
-        public const string Root = "balance";
+        public const string Root = "/balance";
+
+        // Assets
+        public const string AssetsRoute = Root + "/assets";
+        public const string Css = AssetsRoute + "/css";
+        public const string Images = AssetsRoute + "/img";
         
         // Common routes
         public const string New = "new";
