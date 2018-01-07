@@ -4,7 +4,6 @@ using System.Linq;
 using BalanceWebApp.Model.Domain;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace BalanceWebApp.Model.Dao.Dapper
 {

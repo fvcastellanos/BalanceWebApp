@@ -55,6 +55,10 @@ namespace BalanceWebApp.Controllers
             {
                 return View("Index", model);
             }
+
+            var account = GetAccount(accountId);
+            model.AccountName = account.Name;
+            model.AccountNumber = account.AccountNumber;
             
             var result = _transactionService.GetTransactions(accountId, model.Start, model.End);
 

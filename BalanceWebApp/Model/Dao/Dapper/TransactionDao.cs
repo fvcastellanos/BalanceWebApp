@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace BalanceWebApp.Model.Dao.Dapper
 {
