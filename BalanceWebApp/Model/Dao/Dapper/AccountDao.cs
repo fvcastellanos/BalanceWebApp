@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Dapper;
 using System.Linq;
-using Microsoft.CodeAnalysis;
 using BalanceWebApp.Model.Domain;
+using Dapper;
+using Microsoft.Extensions.Logging;
 
 namespace BalanceWebApp.Model.Dao.Dapper
 {
