@@ -9,21 +9,20 @@ namespace BalanceWebApp.Model.Dao.Dapper
 {
     public abstract class BaseDao
     {
-        private static string LastInsertId = "select LAST_INSERT_ID()";
+        private const string LastInsertId = "select LAST_INSERT_ID()";
 
         private readonly ILogger _logger;
-        private AppSettings _settings { get; }
+        private readonly ConnectionFactory _connectionFactory;
 
-        public BaseDao(IOptions<AppSettings> appSettings, ILogger logger)
+        public BaseDao(ILogger logger, ConnectionFactory connectionFactory)
         {
-            _settings = appSettings.Value;
+            _connectionFactory = connectionFactory;
             _logger = logger;
         }
 
         protected IDbConnection GetConnection()
         {
-            _logger.LogInformation("Getting database connection");
-            return new MySqlConnection(_settings.ConnectionString);
+            return _connectionFactory.GetConnection();
         }
 
         protected long GetLasInsertedId()

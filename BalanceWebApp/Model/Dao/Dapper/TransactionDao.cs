@@ -8,7 +8,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
 {
     public class TransactionDao : BaseDao
     {
-        public TransactionDao(IOptions<AppSettings> appSettings, ILogger<TransactionDao> logger) : base(appSettings, logger)
+        public TransactionDao(ILogger<TransactionDao> logger, ConnectionFactory connectionFactory) : base(logger, connectionFactory)
         {
         }
 
