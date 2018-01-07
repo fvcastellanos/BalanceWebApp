@@ -1,3 +1,4 @@
+@using BalanceWebApp.Controllers
 @model BalanceWebApp.Model.Views.Accounts.IndexViewModel
 
 @{
@@ -30,8 +31,8 @@
             {
                 <tr>
                     <td>
-                        <a href="/accounts/@item.Id"><img src="/assets/img/svg/pencil.svg" alt="pencil" class="img-edit"></a>
-                        <a href="/accounts/@item.Id/transactions"><img src="/assets/img/svg/calendar.svg" alt="pencil" class="img-edit img-margin-left"></a>
+                        <a href="/balance/accounts/@item.Id"><img src="@Routes.Images/svg/pencil.svg" alt="pencil" class="img-edit"></a>
+                        <a href="/balance/accounts/@item.Id/transactions"><img src="@Routes.Images/svg/calendar.svg" alt="pencil" class="img-edit img-margin-left"></a>
                     </td>
                     <td>@item.ProviderCountry</td>
                     <td>@item.Provider</td>

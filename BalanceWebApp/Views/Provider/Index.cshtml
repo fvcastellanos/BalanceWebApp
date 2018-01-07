@@ -1,3 +1,4 @@
+@using BalanceWebApp.Controllers
 @model BalanceWebApp.Model.Views.Providers.IndexViewModel
 
 @{
@@ -27,7 +28,7 @@
                 @foreach (var item in Model.Providers)
                 {
                     <tr>
-                        <td><a href="/providers/@item.Id"><img src="/assets/img/svg/pencil.svg" alt="pencil" class="img-edit"></a></td>
+                        <td><a href="/balance/providers/@item.Id"><img src="@Routes.Images/svg/pencil.svg" alt="pencil" class="img-edit"></a></td>
                         <td>@item.Name</td>
                         <td>@item.Country</td>
                     </tr>
