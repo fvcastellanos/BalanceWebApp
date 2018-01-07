@@ -1,4 +1,5 @@
-﻿@model BalanceWebApp.Model.Views.TransactionTypes.IndexViewModel
+﻿@using BalanceWebApp.Controllers
+@model BalanceWebApp.Model.Views.TransactionTypes.IndexViewModel
 
 @{
     ViewData["Title"] = "Transaction Types";
@@ -33,7 +34,7 @@
                 }
                 
                 <tr>
-                    <td><a href="/balance/transaction-types/@item.Id"><img src="/assets/img/svg/pencil.svg" alt="pencil" class="img-edit"></a></td>
+                    <td><a href="/balance/transaction-types/@item.Id"><img src="@Routes.Images/svg/pencil.svg" alt="pencil" class="img-edit"></a></td>
                     <td>@item.Name</td>
                     <td>@type</td>
                 </tr>
