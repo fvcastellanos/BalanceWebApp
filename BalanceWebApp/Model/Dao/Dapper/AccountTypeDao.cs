@@ -13,8 +13,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
     {
         private readonly ILogger<AccountTypeDao> _logger;
 
-        public AccountTypeDao(IOptions<AppSettings> settings, 
-            ILogger<AccountTypeDao> logger) : base(settings, logger)
+        public AccountTypeDao(ILogger<AccountTypeDao> logger, ConnectionFactory connectionFactory) : base(logger, connectionFactory)
         {
             _logger = logger;
         }
@@ -76,7 +75,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
 
                 return id;
             } catch(Exception ex) {
-                _logger.LogError("Unable to create an account type of name: {0}", name);
+                _logger.LogError("Unable to create an account type of name: {0}", name, ex.StackTrace);
                 throw;
             }
         }
@@ -86,7 +85,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
                 var rows = GetConnection().Execute("delete from account_type where id = @Id", new {Id = id});
                 return rows;
             } catch(Exception ex) {
-                _logger.LogError("Unable to delete account type with id: {0}", id);
+                _logger.LogError("Unable to delete account type with id: {0}", id, ex.StackTrace);
                 throw;
             }
         }

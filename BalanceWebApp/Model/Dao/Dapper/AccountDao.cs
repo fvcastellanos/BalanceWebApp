@@ -12,8 +12,8 @@ namespace BalanceWebApp.Model.Dao.Dapper
     public class AccountDao : BaseDao
     {
         private readonly ILogger _logger;
-        
-        public AccountDao(IOptions<AppSettings> appSettings, ILogger<AccountDao> logger) : base(appSettings, logger)
+
+        public AccountDao(ILogger<AccountDao> logger, ConnectionFactory connectionFactory) : base(logger, connectionFactory)
         {
             _logger = logger;
         }

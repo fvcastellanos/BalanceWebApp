@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BalanceWebApp.Model;
 using BalanceWebApp.Model.Dao.Dapper;
 using BalanceWebApp.Services;
@@ -48,6 +45,7 @@ namespace BalanceWebApp
             });
 
             // Data repositories
+            services.AddSingleton<ConnectionFactory, ConnectionFactory>();
             services.AddSingleton<AccountTypeDao, AccountTypeDao>();
             services.AddSingleton<ProviderDao, ProviderDao>();
             services.AddSingleton<TransactionTypeDao, TransactionTypeDao>();

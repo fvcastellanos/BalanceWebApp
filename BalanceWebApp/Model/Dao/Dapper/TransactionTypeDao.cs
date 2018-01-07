@@ -11,7 +11,8 @@ namespace BalanceWebApp.Model.Dao.Dapper
     public class TransactionTypeDao : BaseDao
     {
         private readonly ILogger<TransactionTypeDao> _logger;
-        public TransactionTypeDao(IOptions<AppSettings> appSettings, ILogger<TransactionTypeDao> logger) : base(appSettings, logger)
+
+        public TransactionTypeDao(ConnectionFactory connectionFactory, ILogger<TransactionTypeDao> logger) : base(logger, connectionFactory)
         {
             _logger = logger;
         }

@@ -20,7 +20,7 @@ namespace BalanceWebApp.Model.Dao.Dapper
         private static string NEW = "insert into provider (name, country) values (@Name, @Country)";
         private static string DELETE = "delete from provider where id = @Id";
 
-        public ProviderDao(IOptions<AppSettings> settings,  ILogger<ProviderDao> logger) : base(settings, logger)
+        public ProviderDao(ILogger<ProviderDao> logger, ConnectionFactory connectionFactory) : base(logger, connectionFactory)
         {
             _logger = logger;
         }
