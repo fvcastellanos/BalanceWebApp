@@ -1,0 +1,48 @@
+@model BalanceWebApp.Model.Views.Accounts.IndexViewModel
+
+@{
+    ViewData["Title"] = "Accounts";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>@ViewData["Title"]</h3>
+
+        @if (Model.Message != null)
+        {
+            <div class="alert alert-danger content-separator">
+                @Model.Message
+            </div>
+        }
+
+        <table class="table table-striped table-bordered content-separator">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Country</th>
+                <th>Provider</th>
+                <th>Name</th>
+                <th>Number</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Accounts)
+            {
+                <tr>
+                    <td>
+                        <a href="/accounts/@item.Id"><img src="/assets/img/svg/pencil.svg" alt="pencil" class="img-edit"></a>
+                        <a href="/accounts/@item.Id/transactions"><img src="/assets/img/svg/calendar.svg" alt="pencil" class="img-edit img-margin-left"></a>
+                    </td>
+                    <td>@item.ProviderCountry</td>
+                    <td>@item.Provider</td>
+                    <td>@item.Name</td>
+                    <td>@item.AccountNumber</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        <a class="btn btn-primary" asp-controller="Account" asp-action="New">New</a>
+
+    </div>
+</div>

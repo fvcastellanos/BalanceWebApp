@@ -1,0 +1,35 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model BalanceWebApp.Model.Views.AccountTypes.UpdateViewModel
+
+@{
+    ViewData["Title"] = "Update Account Type";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>@ViewData["Title"]</h3>
+
+        @if (Model.Message != null)
+        {
+            <div class="alert alert-danger content-separator">
+                @Model.Message
+            </div>
+        }
+
+        <form method="post" class="content-separator">
+            @Html.AntiForgeryToken()
+
+            @Html.Hidden("Id", Model.Id)
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                @Html.TextBoxFor(model => model.Name, new { @class = "form-control", @placeholder = "Name", @id = "name", @name="name" })
+                @Html.ValidationMessageFor(model => model.Name, string.Empty, new { @class = "text-danger" })
+            </div>
+
+            <input type="submit" class="btn btn-primary" value="Update" />
+            @Html.ActionLink("Back", "Index", "AccountType", null, new { @class = "btn" })
+        </form>
+
+    </div>
+</div>

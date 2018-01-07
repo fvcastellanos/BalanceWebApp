@@ -1,0 +1,51 @@
+@using Microsoft.AspNetCore.Mvc.Rendering
+@model BalanceWebApp.Model.Views.Accounts.NewViewModel
+
+@{
+    ViewData["Title"] = "New Account";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>@ViewData["Title"]</h3>
+
+        @if (Model.Message != null)
+        {
+            <div class="alert alert-danger content-separator">
+                @Model.Message
+            </div>
+        }
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="account-type">Account Type</label>
+                @Html.DropDownListFor(model => model.AccountTypeId, new SelectList(Model.AccountTypes, "Value", "Text"), new { @class = "form-control", @name="account-type" })
+                @Html.ValidationMessageFor(model => model.AccountTypeId, string.Empty, new {@class = "text-danger"})
+            </div>
+
+            <div class="form-group">
+                <label for="provider">Provider</label>
+                @Html.DropDownListFor(model => model.ProviderId, new SelectList(Model.Providers, "Value", "Text"), new { @class = "form-control", @name="provider" })
+                @Html.ValidationMessageFor(model => model.ProviderId, string.Empty, new {@class = "text-danger"})
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                @Html.TextBoxFor(model => model.Name, new {@class = "form-control", @placeholder = "Name", @name = "name"})
+                @Html.ValidationMessageFor(model => model.Name, string.Empty, new {@class = "text-danger"})
+            </div>
+
+            <div class="form-group">
+                <label for="number">Number</label>
+                @Html.TextBoxFor(model => model.Number, new {@class = "form-control", @placeholder = "Number", @name = "number"})
+                @Html.ValidationMessageFor(model => model.Number, string.Empty, new {@class = "text-danger"})
+            </div>
+            
+            <input type="submit" class="btn btn-primary" value="Add" />
+            @Html.ActionLink("Back", "Index", "Account", null, new { @class = "btn" })
+        </form>
+
+    </div>
+</div>    
