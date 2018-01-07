@@ -53,7 +53,7 @@ namespace BalanceWebApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("Index", model);
             }
             
             var result = _transactionService.GetTransactions(accountId, model.Start, model.End);
@@ -61,11 +61,11 @@ namespace BalanceWebApp.Controllers
             if (result.HasErrors())
             {
                 model.Message = result.GetFailure();
-                return View(model);
+                return View("Index", model);
             }
 
             model.Transactions = result.GetPayload();
-            return View(model);
+            return View("Index", model);
         }
         
         [Route("{accountId}" + Transactions + "/" + Routes.New)]
