@@ -41,6 +41,12 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Account" asp-action="Index">Accounts</a>
                         </li>
+                        @if (HttpContext.User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Logout" asp-action="Logout">Logout</a>
+                            </li>                        
+                        }
                     </ul>
                 </div>
             </nav>

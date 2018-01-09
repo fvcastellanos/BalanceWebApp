@@ -1,5 +1,8 @@
 ﻿using System.IO;
+using System.Net;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
 
 namespace BalanceWebApp
 {
@@ -7,15 +10,19 @@ namespace BalanceWebApp
     {
         public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseUrls("http://0.0.0.0:5000/balance")
+            var webHost = BuildWebHost(args);
+
+            webHost.Run();
+        }
+
+        public static IWebHost BuildWebHost(string [] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseKestrel(options => {
+                    options.Listen(IPAddress.Any, 5000);
+                })
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();
 
-            host.Run();
-        }
     }
 }

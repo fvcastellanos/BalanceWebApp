@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using BalanceWebApp.Model.Domain;
 using BalanceWebApp.Model.Views.AccountTypes;
 using BalanceWebApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using static BalanceWebApp.Controllers.Routes;
 
 namespace BalanceWebApp.Controllers
 {
+    [Authorize]
     [Route(AccountTypes)]
     public class AccountTypeController : BaseController
     {

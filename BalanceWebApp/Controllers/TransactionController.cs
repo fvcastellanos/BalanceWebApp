@@ -6,12 +6,14 @@ using BalanceWebApp.Model.Domain;
 using BalanceWebApp.Model.Views;
 using BalanceWebApp.Model.Views.Transactions;
 using BalanceWebApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using static BalanceWebApp.Controllers.Routes;
 
 namespace BalanceWebApp.Controllers
 {
+    [Authorize]
     [Route(Accounts)]
     public class TransactionController : BaseController
     {

@@ -8,6 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
+
 namespace BalanceWebApp
 {
     public class Startup
@@ -27,6 +31,35 @@ namespace BalanceWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(sharedOptions =>
+            {
+                sharedOptions.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                sharedOptions.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                sharedOptions.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddOpenIdConnect(options =>
+            {                
+                options.ClientId = Environment.GetEnvironmentVariable("CLIENT_ID");
+                options.ClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
+                options.Authority = Environment.GetEnvironmentVariable("AUTHORITY");
+                // options.ClientId = "{clientId}";
+                // options.ClientSecret = "{clientSecret}";
+                // options.Authority = "https://dev-149130.oktapreview.com/oauth2/default";
+                options.CallbackPath = "/authorization-code/callback";
+                options.ResponseType = "code";
+                options.SaveTokens = true;
+                options.UseTokenLifetime = false;
+                options.GetClaimsFromUserInfoEndpoint = true;
+                options.Scope.Add("openid");
+                options.Scope.Add("profile");
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name"
+                };
+            });            
+
+
             // Add framework services.
             services.AddLogging();
             services.AddOptions();
@@ -36,13 +69,6 @@ namespace BalanceWebApp
             
             // Adds a default in-memory implementation of IDistributedCache.
             services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromMinutes(15);
-                options.CookieHttpOnly = true;
-            });
 
             // Data repositories
             services.AddSingleton<ConnectionFactory, ConnectionFactory>();
@@ -77,6 +103,8 @@ namespace BalanceWebApp
             }
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
