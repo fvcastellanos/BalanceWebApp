@@ -4,9 +4,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BalanceWebApp.Controllers
 {
-    [Route("logout")]
-    public class LogoutController : BaseController
+    public class UserController : BaseController
     {
+
+        public IActionResult Login()
+        {
+            if (!HttpContext.User.Identity.IsAuthenticated)
+            {
+                return Challenge(OpenIdConnectDefaults.AuthenticationScheme);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
         public IActionResult Logout()
         {
             if (HttpContext.User.Identity.IsAuthenticated)
