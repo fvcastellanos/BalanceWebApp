@@ -10,7 +10,7 @@ COPY . ./
 RUN dotnet publish -c Release -o out
 
 # build runtime image
-FROM microsoft/dotnet:1.1-runtime 
+FROM microsoft/dotnet:2.0-runtime 
 WORKDIR /opt/cavitos/balance
 COPY --from=build-env /app/BalanceWebApp/out ./
 EXPOSE 5000
