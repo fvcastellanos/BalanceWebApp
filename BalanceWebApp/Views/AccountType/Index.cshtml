@@ -9,15 +9,6 @@
     <div class="col-md-12">
         <h3>@ViewData["Title"]</h3>
 
-        <!-- <form method="post">
-            <div class="form-group">
-                <label for="url">URL</label>
-                <input type="text" name="url" placeholder="URL" class="form-control" value="" />
-            </div>
-
-            <input type="submit" class="btn btn-primary" value="Capture URL" />
-        </form> -->
-
         @if (Model.Message != null)
         {
             <div class="alert alert-danger content-separator">
@@ -36,7 +27,7 @@
                 @foreach (var item in Model.AccountTypes)
                 {
                     <tr>
-                        <td><a href="/balance/account-types/@item.Id"><img src="@Routes.Images/svg/pencil.svg" alt="pencil" class="img-edit"></a></td>
+                        <td><a href="/account-types/@item.Id"><img src="@Routes.Images/svg/pencil.svg" alt="pencil" class="img-edit"></a></td>
                         <td>@item.Name</td>
                     </tr>
                 }
