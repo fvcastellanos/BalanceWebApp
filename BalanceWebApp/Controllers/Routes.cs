@@ -2,7 +2,8 @@
 {
     public class Routes
     {
-        public const string Root = "/balance";
+        // public const string Root = "/balance";
+        public const string Root = "";
 
         // Assets
         public const string AssetsRoute = Root + "/assets";

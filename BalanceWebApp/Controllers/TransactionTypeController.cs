@@ -3,12 +3,14 @@ using BalanceWebApp.Model.Domain;
 using BalanceWebApp.Model.Views;
 using BalanceWebApp.Model.Views.TransactionTypes;
 using BalanceWebApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using static BalanceWebApp.Controllers.Routes;
 
 namespace BalanceWebApp.Controllers
 {
+    [Authorize]
     [Route(TransactionTypes)]
     public class TransactionTypeController : BaseController
     {
