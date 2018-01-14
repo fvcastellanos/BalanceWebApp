@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading.Tasks;
 using BalanceWebApp.Model;
 using BalanceWebApp.Model.Dao.Dapper;
 using BalanceWebApp.Services;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Logging;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BalanceWebApp
@@ -27,7 +30,7 @@ namespace BalanceWebApp
         }
 
         public IConfigurationRoot Configuration { get; }
-
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -43,10 +46,8 @@ namespace BalanceWebApp
                 options.ClientId = Environment.GetEnvironmentVariable("CLIENT_ID");
                 options.ClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET");
                 options.Authority = Environment.GetEnvironmentVariable("AUTHORITY");
-                // options.ClientId = "{clientId}";
-                // options.ClientSecret = "{clientSecret}";
-                // options.Authority = "https://dev-149130.oktapreview.com/oauth2/default";
                 options.CallbackPath = "/authorization-code/callback";
+
                 options.ResponseType = "code";
                 options.SaveTokens = true;
                 options.UseTokenLifetime = false;
@@ -57,6 +58,9 @@ namespace BalanceWebApp
                 {
                     NameClaimType = "name"
                 };
+
+                options.Events = ConfigureOpenIdConnectEvents();
+                
             });            
 
             // Add framework services.
@@ -94,16 +98,15 @@ namespace BalanceWebApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
-
             app.UseAuthentication();
+
+            app.UseStaticFiles();
 
             app.UseMvc(routes =>
             {
@@ -112,5 +115,36 @@ namespace BalanceWebApp
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
+        
+        private static OpenIdConnectEvents ConfigureOpenIdConnectEvents()
+        {
+            return new OpenIdConnectEvents()
+            {
+                OnRedirectToIdentityProvider = context =>
+                {
+                    context.ProtocolMessage.RedirectUri =
+                        TransformToHttpsInProduction(context.ProtocolMessage.RedirectUri);
+                    
+                    return Task.FromResult(0);
+                },
+                
+                OnRedirectToIdentityProviderForSignOut = context =>
+                {
+                    context.ProtocolMessage.PostLogoutRedirectUri =
+                        TransformToHttpsInProduction(context.ProtocolMessage.PostLogoutRedirectUri);
+
+                    return Task.FromResult(0);
+                }
+            };
+        }
+
+        private static string TransformToHttpsInProduction(string input)
+        {
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            var isProduction = "Production".Equals(env) ? true : false;
+
+            return isProduction ? input.ToLower().Replace("http", "https") : input;            
+        }        
     }
 }
