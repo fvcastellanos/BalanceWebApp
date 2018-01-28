@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BalanceWebApp.Model;
 using BalanceWebApp.Model.Dao.Dapper;
 using BalanceWebApp.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
