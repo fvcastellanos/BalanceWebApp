@@ -5,9 +5,9 @@ using BalanceWebApp.Model.Domain;
 using Dapper;
 using Microsoft.Extensions.Logging;
 
-namespace BalanceWebApp.Model.Dao.Dapper
+namespace BalanceWebApp.Model.Dao
 {
-    public class AccountDao : BaseDao
+    public class AccountDao : BaseDao, IAccountDao
     {
         private readonly ILogger _logger;
 

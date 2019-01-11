@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Dapper;
 using Microsoft.Extensions.Logging;
 
-namespace BalanceWebApp.Model.Dao.Dapper
+namespace BalanceWebApp.Model.Dao
 {
     public class TransactionDao : BaseDao
     {

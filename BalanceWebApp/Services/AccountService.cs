@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BalanceWebApp.Model.Dao.Dapper;
+using BalanceWebApp.Model.Dao;
 using BalanceWebApp.Model.Domain;
 using Microsoft.Extensions.Logging;
 
@@ -8,12 +8,12 @@ namespace BalanceWebApp.Services
 {
     public class AccountService : BaseService
     {
-        private readonly AccountDao _accountDao;
+        private readonly IAccountDao _accountDao;
         private readonly ProviderDao _providerDao;
         private readonly AccountTypeDao _accountTypeDao;
         private readonly ILogger _logger;
 
-        public AccountService(ILogger<AccountService> logger, AccountDao accountDao,
+        public AccountService(ILogger<AccountService> logger, IAccountDao accountDao,
                 ProviderDao providerDao, AccountTypeDao accountTypeDao)
         {
             _accountDao = accountDao;
@@ -89,7 +89,7 @@ namespace BalanceWebApp.Services
                     return Result<string, Account>.ForFailure("Account not found");
                 }
 
-                if (!ProvierExist(account.ProviderId)) return Result<string, Account>.ForFailure("Provider not found");
+                if (!ProviderExist(account.ProviderId)) return Result<string, Account>.ForFailure("Provider not found");
 
                 if (!AccountTypeExist(account.AccountTypeId))
                     return Result<string, Account>.ForFailure("Account type not found");
@@ -106,7 +106,7 @@ namespace BalanceWebApp.Services
             }
         }
 
-        private bool ProvierExist(long id)
+        private bool ProviderExist(long id)
         {
             _logger.LogInformation("Getting provider: {0}", id);
             var providerHolder = _providerDao.GetById(id);

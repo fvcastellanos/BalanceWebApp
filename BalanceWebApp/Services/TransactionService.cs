@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BalanceWebApp.Model;
-using BalanceWebApp.Model.Dao.Dapper;
+using BalanceWebApp.Model.Dao;
 using BalanceWebApp.Model.Domain;
 using Microsoft.Extensions.Logging;
 

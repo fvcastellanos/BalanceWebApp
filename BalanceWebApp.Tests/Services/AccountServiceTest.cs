@@ -1,24 +1,23 @@
-
 using System.Collections.Generic;
-using BalanceWebApp.Model.Dao.Dapper;
+using BalanceWebApp.Model.Dao;
 using BalanceWebApp.Model.Domain;
-using Microsoft.Extensions.Logging;
+using BalanceWebApp.Services;
 using Moq;
 using NUnit.Framework;
 
-namespace BalanceWebApp.Services 
+namespace BalanceWebApp.Tests.Services 
 {
     public class AccountServiceTest
     {
 
         private AccountService accountService;
 
-        private Mock<AccountDao> accountDaoMock;
+        private Mock<IAccountDao> accountDaoMock;
 
         [SetUp]
         public void SetUp()
         {
-            accountDaoMock = new Mock<AccountDao>();
+            accountDaoMock = new Mock<IAccountDao>();
 
             accountService = new AccountService(null, accountDaoMock.Object, null, null);
         }

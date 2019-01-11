@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using BalanceWebApp.Model;
-using BalanceWebApp.Model.Dao.Dapper;
+using BalanceWebApp.Model.Dao;
 using BalanceWebApp.Services;
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BalanceWebApp
@@ -79,7 +75,7 @@ namespace BalanceWebApp
             services.AddSingleton<AccountTypeDao, AccountTypeDao>();
             services.AddSingleton<ProviderDao, ProviderDao>();
             services.AddSingleton<TransactionTypeDao, TransactionTypeDao>();
-            services.AddSingleton<AccountDao, AccountDao>();
+            services.AddSingleton<IAccountDao, AccountDao>();
             services.AddSingleton<TransactionDao, TransactionDao>();
 
             // Services

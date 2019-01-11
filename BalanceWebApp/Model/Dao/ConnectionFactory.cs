@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MySql.Data.MySqlClient;
 
-namespace BalanceWebApp.Model.Dao.Dapper
+namespace BalanceWebApp.Model.Dao
 {
     public class ConnectionFactory
     {

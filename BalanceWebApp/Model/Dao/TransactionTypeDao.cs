@@ -4,7 +4,7 @@ using BalanceWebApp.Model.Domain;
 using Dapper;
 using Microsoft.Extensions.Logging;
 
-namespace BalanceWebApp.Model.Dao.Dapper
+namespace BalanceWebApp.Model.Dao
 {
     public class TransactionTypeDao : BaseDao
     {
