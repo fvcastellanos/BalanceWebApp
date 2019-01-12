@@ -9,12 +9,12 @@ namespace BalanceWebApp.Services
     public class AccountService : BaseService
     {
         private readonly IAccountDao _accountDao;
-        private readonly ProviderDao _providerDao;
-        private readonly AccountTypeDao _accountTypeDao;
+        private readonly IProviderDao _providerDao;
+        private readonly IAccountTypeDao _accountTypeDao;
         private readonly ILogger _logger;
 
         public AccountService(ILogger<AccountService> logger, IAccountDao accountDao,
-                ProviderDao providerDao, AccountTypeDao accountTypeDao)
+                IProviderDao providerDao, IAccountTypeDao accountTypeDao)
         {
             _accountDao = accountDao;
             _providerDao = providerDao;

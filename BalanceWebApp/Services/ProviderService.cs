@@ -10,9 +10,9 @@ namespace BalanceWebApp.Services
     {
         private readonly ILogger _logger;
 
-        private readonly ProviderDao _providerDao;
+        private readonly IProviderDao _providerDao;
 
-        public ProviderService(ILogger<ProviderService> logger, ProviderDao providerDao)
+        public ProviderService(ILogger<ProviderService> logger, IProviderDao providerDao)
         {
             _logger = logger;
             _providerDao = providerDao;

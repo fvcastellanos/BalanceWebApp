@@ -9,9 +9,9 @@ namespace BalanceWebApp.Services
     public class AccountTypeService : BaseService
     {
         private readonly ILogger<AccountTypeService> _logger;
-        private readonly AccountTypeDao _accountTypeDao;
+        private readonly IAccountTypeDao _accountTypeDao;
 
-        public AccountTypeService(ILogger<AccountTypeService> logger, AccountTypeDao accountTypeDao)
+        public AccountTypeService(ILogger<AccountTypeService> logger, IAccountTypeDao accountTypeDao)
         {
             _accountTypeDao = accountTypeDao;
             _logger = logger;

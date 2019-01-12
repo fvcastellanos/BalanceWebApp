@@ -10,9 +10,9 @@ namespace BalanceWebApp.Services
     {
         private readonly ILogger _logger;
 
-        private readonly TransactionTypeDao _transactionTypeDao;
+        private readonly ITransactionTypeDao _transactionTypeDao;
 
-        public TransactionTypeService(ILogger<TransactionTypeService> logger, TransactionTypeDao transactionTypeDao)
+        public TransactionTypeService(ILogger<TransactionTypeService> logger, ITransactionTypeDao transactionTypeDao)
         {
             _logger = logger;
             _transactionTypeDao = transactionTypeDao;

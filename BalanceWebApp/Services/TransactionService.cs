@@ -9,17 +9,17 @@ namespace BalanceWebApp.Services
 {
     public class TransactionService
     {
-        private readonly TransactionDao _transactionDao;
-        private readonly TransactionTypeDao _transactionTypeDao;
-        private readonly AccountDao _accountDao;
+        private readonly ITransactionDao _transactionDao;
+        private readonly ITransactionTypeDao _transactionTypeDao;
+        private readonly IAccountDao _accountDao;
         private readonly ILogger _logger;
 
-        public TransactionService(TransactionDao transactionDao, TransactionTypeDao transactionTypeDao, AccountDao accountDao, ILogger<TransactionService> logger)
+        public TransactionService(ILogger<TransactionService> logger, ITransactionDao transactionDao, ITransactionTypeDao transactionTypeDao, IAccountDao accountDao)
         {
+            _logger = logger;
             _transactionDao = transactionDao;
             _transactionTypeDao = transactionTypeDao;
             _accountDao = accountDao;
-            _logger = logger;
         }
 
         public Result<string, IList<Transaction>> GetTransactions(long accountId, DateTime start, DateTime end)

@@ -72,11 +72,11 @@ namespace BalanceWebApp
 
             // Data repositories
             services.AddSingleton<ConnectionFactory, ConnectionFactory>();
-            services.AddSingleton<AccountTypeDao, AccountTypeDao>();
-            services.AddSingleton<ProviderDao, ProviderDao>();
-            services.AddSingleton<TransactionTypeDao, TransactionTypeDao>();
+            services.AddSingleton<IAccountTypeDao, AccountTypeDao>();
+            services.AddSingleton<IProviderDao, ProviderDao>();
+            services.AddSingleton<ITransactionTypeDao, TransactionTypeDao>();
             services.AddSingleton<IAccountDao, AccountDao>();
-            services.AddSingleton<TransactionDao, TransactionDao>();
+            services.AddSingleton<ITransactionDao, TransactionDao>();
 
             // Services
             services.AddSingleton<AccountTypeService, AccountTypeService>();
