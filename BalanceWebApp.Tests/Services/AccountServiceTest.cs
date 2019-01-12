@@ -36,6 +36,7 @@ namespace BalanceWebApp.Tests.Services
             Assert.NotNull(result.GetPayload());
             
             _accountDao.Verify(dao => dao.GetAll());
+            _accountDao.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -50,8 +51,68 @@ namespace BalanceWebApp.Tests.Services
             Assert.AreEqual("Can't get accounts", result.GetFailure());
             
             _accountDao.Verify(dao => dao.GetAll());
+            _accountDao.VerifyNoOtherCalls();
         }
 
+        [Test]
+        public void TestGetById()
+        {
+            var expectedAccount = BuildAccount();
+            _accountDao.Setup(dao => dao.GetById(It.IsAny<long>()))
+                .Returns(expectedAccount);
+
+            var result = _accountService.GetById(0);
+            
+            Assert.True(result.IsSuccess());
+            Assert.AreEqual(expectedAccount, result.GetPayload());
+            
+            _accountDao.Verify(dao => dao.GetById(It.IsAny<long>()));
+            _accountDao.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void TestGetByIdException()
+        {
+            _accountDao.Setup(dao => dao.GetById(It.IsAny<long>()))
+                .Throws(new Exception("expected exception"));
+
+            var result = _accountService.GetById(0);
+            
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Can't get account", result.GetFailure());
+            
+            _accountDao.Verify(dao => dao.GetById(It.IsAny<long>()));           
+            _accountDao.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void TestAddNew()
+        {
+            var expectedAccount = BuildAccount();
+            
+            _accountDao.Setup(dao => dao.CreateAccount(It.IsAny<long>(), It.IsAny<long>(),
+                    It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(0);
+
+            _accountDao.Setup(dao => dao.GetById(0))
+                .Returns(expectedAccount);
+
+            _accountDao.Setup(dao => dao.GetAccount(0, 0, "123"));
+            
+            var result = _accountService.AddNew(0, 0, "name", "123");
+            
+            Assert.True(result.IsSuccess());
+            Assert.AreEqual(expectedAccount, result.GetPayload());
+
+            _accountDao.Verify(dao => dao.CreateAccount(It.IsAny<long>(), It.IsAny<long>(),
+                It.IsAny<string>(), It.IsAny<string>()));
+
+            _accountDao.Verify(dao => dao.GetAccount(0, 0, "123"));
+            
+            _accountDao.Verify(dao => dao.GetById(0));
+            _accountDao.VerifyNoOtherCalls();
+        }
+        
         private static ICollection<Account> BuildAccountList()
         {
             var list = new List<Account> { BuildAccount() };
