@@ -9,13 +9,11 @@ namespace BalanceWebApp.Model.Dao
     {
         private const string LastInsertId = "select LAST_INSERT_ID()";
 
-        private readonly ILogger _logger;
         private readonly ConnectionFactory _connectionFactory;
 
-        public BaseDao(ILogger logger, ConnectionFactory connectionFactory)
+        protected BaseDao(ConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
-            _logger = logger;
         }
 
         protected IDbConnection GetConnection()
@@ -25,7 +23,6 @@ namespace BalanceWebApp.Model.Dao
 
         protected long GetLasInsertedId()
         {
-            _logger.LogInformation("Getting last inserted Id");
             return GetConnection().Query<long>(LastInsertId).Single();
         }        
     }

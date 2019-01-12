@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Dapper;
-using Microsoft.Extensions.Logging;
 
 namespace BalanceWebApp.Model.Dao
 {
-    public class TransactionDao : BaseDao
+    public class TransactionDao : BaseDao, ITransactionDao
     {
-        public TransactionDao(ILogger<TransactionDao> logger, ConnectionFactory connectionFactory) : base(logger, connectionFactory)
+        public TransactionDao(ConnectionFactory connectionFactory) : base(connectionFactory)
         {
         }
 

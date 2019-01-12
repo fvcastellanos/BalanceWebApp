@@ -2,22 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using BalanceWebApp.Model.Domain;
 using Dapper;
-using Microsoft.Extensions.Logging;
 
 namespace BalanceWebApp.Model.Dao
 {
-    public class TransactionTypeDao : BaseDao
+    public class TransactionTypeDao : BaseDao, ITransactionTypeDao
     {
-        private readonly ILogger<TransactionTypeDao> _logger;
-
-        public TransactionTypeDao(ConnectionFactory connectionFactory, ILogger<TransactionTypeDao> logger) : base(logger, connectionFactory)
+        public TransactionTypeDao(ConnectionFactory connectionFactory) : base(connectionFactory)
         {
-            _logger = logger;
         }
 
         public List<TransactionType> GetAll()
         {
-            _logger.LogInformation("Getting the transactions types from DB");
             return GetConnection().Query<TransactionType>("select * from transaction_type").AsList();
         }
 
@@ -30,7 +25,6 @@ namespace BalanceWebApp.Model.Dao
         public long New(TransactionType transactionType)
         {
             long id = 0;
-            _logger.LogInformation("Adding a new transaction type with name: {0} and type: {1}", transactionType.Name, transactionType.Credit);
 
             var rows = GetConnection().Execute("insert into transaction_type (name, credit) values (@Name, @Credit)",
                 new {transactionType.Name, transactionType.Credit });
