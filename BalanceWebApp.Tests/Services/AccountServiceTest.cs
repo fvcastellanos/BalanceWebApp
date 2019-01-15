@@ -14,21 +14,22 @@ namespace BalanceWebApp.Tests.Services
         private AccountService _accountService;
 
         private Mock<IAccountDao> _accountDao;
+        private Mock<IProviderDao> _providerDao;
         
         [SetUp]
         public void SetUp()
         {
             _accountDao = new Mock<IAccountDao>();
+            _providerDao = new Mock<IProviderDao>();
             var logger = new Logger<AccountService>(new LoggerFactory());
             
-            _accountService = new AccountService(logger, _accountDao.Object, null, null);
+            _accountService = new AccountService(logger, _accountDao.Object, _providerDao.Object, null);
         }
 
         [Test]
         public void TestGetAll()
         {
-            _accountDao.Setup(dao => dao.GetAll())
-                .Returns(BuildAccountList);
+            ExpectAccountList();
 
             var result = _accountService.GetAll();
             
@@ -90,12 +91,8 @@ namespace BalanceWebApp.Tests.Services
         {
             var expectedAccount = BuildAccount();
             
-            _accountDao.Setup(dao => dao.CreateAccount(It.IsAny<long>(), It.IsAny<long>(),
-                    It.IsAny<string>(), It.IsAny<string>()))
-                .Returns(0);
-
-            _accountDao.Setup(dao => dao.GetById(0))
-                .Returns(expectedAccount);
+            var id = ExpectSuccessAccountCreation();
+            ExpectAccountForId(expectedAccount, id);
 
             _accountDao.Setup(dao => dao.GetAccount(0, 0, "123"));
             
@@ -109,10 +106,112 @@ namespace BalanceWebApp.Tests.Services
 
             _accountDao.Verify(dao => dao.GetAccount(0, 0, "123"));
             
-            _accountDao.Verify(dao => dao.GetById(0));
+            _accountDao.Verify(dao => dao.GetById(id));
             _accountDao.VerifyNoOtherCalls();
         }
+
+        [Test]
+        public void TestAddNewWithExistingAccount()
+        {
+            var account = BuildAccount();
+
+            _accountDao.Setup(dao => dao.GetAccount(0, 0, "123"))
+                .Returns(account);
+
+            var result = _accountService.AddNew(0, 0, "name", "123");
+            
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Looks like the account already exists", result.GetFailure());
+
+            _accountDao.Verify(dao => dao.GetAccount(0, 0, "123"));
+            _accountDao.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void TestAddNewThrowsException()
+        {
+            _accountDao.Setup(dao => dao.GetAccount(0, 0, "123"))
+                .Throws(new Exception("expected exception"));
+            
+            var result = _accountService.AddNew(0, 0, "name", "123");
+            
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Can't create new account", result.GetFailure());
+
+            _accountDao.Verify(dao => dao.GetAccount(0, 0, "123"));
+            _accountDao.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void TestUpdateNonExistingAccount()
+        {
+            var account = BuildAccount();
+
+            _accountDao.Setup(dao => dao.GetById(It.IsAny<long>()));
+
+            var result = _accountService.Update(account);
+            
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Account not found", result.GetFailure());
+         
+            _accountDao.Verify(dao => dao.GetById(It.IsAny<long>()));
+            _accountDao.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void TestUpdateNonExistingProvider()
+        {
+            var account = BuildAccount();
+
+            _accountDao.Setup(dao => dao.GetById(It.IsAny<long>()))
+                .Returns(account);
+
+            _providerDao.Setup(dao => dao.GetById(It.IsAny<long>()));
+            
+            var result = _accountService.Update(account);
+            
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Provider not found", result.GetFailure());
+         
+            _accountDao.Verify(dao => dao.GetById(It.IsAny<long>()));
+            
+            _providerDao.Verify(dao => dao.GetById(It.IsAny<long>()));
+            
+            _accountDao.VerifyNoOtherCalls();
+            _providerDao.VerifyNoOtherCalls();
+        }
         
+        // ------------------------------------------------------------------------------------------------------------
+
+        private static long CalculateRandomId()
+        {
+            var random = new Random();
+            return random.Next(1, 300);
+        }
+
+        private void ExpectAccountList()
+        {
+            _accountDao.Setup(dao => dao.GetAll())
+                .Returns(BuildAccountList);
+        }
+
+        private long ExpectSuccessAccountCreation()
+        {
+            var id = CalculateRandomId();
+
+            _accountDao.Setup(dao => dao.CreateAccount(It.IsAny<long>(), It.IsAny<long>(),
+                    It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(id);
+
+            return id;
+        }
+
+        private void ExpectAccountForId(Account account, long id)
+        {
+            _accountDao.Setup(dao => dao.GetById(id))
+                .Returns(account);
+        }
+
         private static ICollection<Account> BuildAccountList()
         {
             var list = new List<Account> { BuildAccount() };
