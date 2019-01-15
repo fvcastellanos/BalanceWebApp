@@ -225,16 +225,13 @@ namespace BalanceWebApp.Tests.Services
             _accountDao.Setup(dao => dao.GetById(It.IsAny<long>()))
                 .Returns(account);
 
-            _accountDao.Setup(dao => dao.Update(It.IsAny<Account>()))
-                .Verifiable();
+            _accountDao.Setup(dao => dao.Update(It.IsAny<Account>()));
 
             _providerDao.Setup(dao => dao.GetById(It.IsAny<long>()))
                 .Returns(provider);
 
             _accountTypeDao.Setup(dao => dao.FindById(It.IsAny<long>()))
                 .Returns(accountType);
-
-            _accountTypeDao.Setup(dao => dao.FindById(It.IsAny<long>()));
 
             var result = _accountService.Update(account);
 
