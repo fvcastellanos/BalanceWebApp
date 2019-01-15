@@ -15,15 +15,19 @@ namespace BalanceWebApp.Tests.Services
 
         private Mock<IAccountDao> _accountDao;
         private Mock<IProviderDao> _providerDao;
+
+        private Mock<IAccountTypeDao> _accountTypeDao;
         
         [SetUp]
         public void SetUp()
         {
             _accountDao = new Mock<IAccountDao>();
             _providerDao = new Mock<IProviderDao>();
+            _accountTypeDao = new Mock<IAccountTypeDao>();
+
             var logger = new Logger<AccountService>(new LoggerFactory());
             
-            _accountService = new AccountService(logger, _accountDao.Object, _providerDao.Object, null);
+            _accountService = new AccountService(logger, _accountDao.Object, _providerDao.Object, _accountTypeDao.Object);
         }
 
         [Test]
@@ -105,8 +109,8 @@ namespace BalanceWebApp.Tests.Services
                 It.IsAny<string>(), It.IsAny<string>()));
 
             _accountDao.Verify(dao => dao.GetAccount(0, 0, "123"));
-            
             _accountDao.Verify(dao => dao.GetById(id));
+
             _accountDao.VerifyNoOtherCalls();
         }
 
@@ -156,6 +160,8 @@ namespace BalanceWebApp.Tests.Services
          
             _accountDao.Verify(dao => dao.GetById(It.IsAny<long>()));
             _accountDao.VerifyNoOtherCalls();
+            _providerDao.VerifyNoOtherCalls();
+            _accountTypeDao.VerifyNoOtherCalls();
         }
 
         [Test]
@@ -174,13 +180,77 @@ namespace BalanceWebApp.Tests.Services
             Assert.AreEqual("Provider not found", result.GetFailure());
          
             _accountDao.Verify(dao => dao.GetById(It.IsAny<long>()));
-            
             _providerDao.Verify(dao => dao.GetById(It.IsAny<long>()));
             
             _accountDao.VerifyNoOtherCalls();
             _providerDao.VerifyNoOtherCalls();
+            _accountTypeDao.VerifyNoOtherCalls();
         }
         
+        [Test]
+        public void TestUpdateNonExistingAccountType()
+        {
+            var account = BuildAccount();
+            var provider = BuildProvider();
+
+            _accountDao.Setup(dao => dao.GetById(It.IsAny<long>()))
+                .Returns(account);
+
+            _providerDao.Setup(dao => dao.GetById(It.IsAny<long>()))
+                .Returns(provider);
+
+            _accountTypeDao.Setup(dao => dao.FindById(It.IsAny<long>()));
+
+            var result = _accountService.Update(account);
+
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Account type not found", result.GetFailure());
+
+            _accountDao.Verify(dao => dao.GetById(It.IsAny<long>()));
+            _providerDao.Verify(dao => dao.GetById(It.IsAny<long>()));
+            _accountTypeDao.Verify(dao => dao.FindById(It.IsAny<long>()));
+
+            _accountDao.VerifyNoOtherCalls();
+            _providerDao.VerifyNoOtherCalls();
+            _accountTypeDao.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void TestUpdate()
+        {
+            var account = BuildAccount();
+            var provider = BuildProvider();
+            var accountType = BuildAccountType();
+
+            _accountDao.Setup(dao => dao.GetById(It.IsAny<long>()))
+                .Returns(account);
+
+            _accountDao.Setup(dao => dao.Update(It.IsAny<Account>()))
+                .Verifiable();
+
+            _providerDao.Setup(dao => dao.GetById(It.IsAny<long>()))
+                .Returns(provider);
+
+            _accountTypeDao.Setup(dao => dao.FindById(It.IsAny<long>()))
+                .Returns(accountType);
+
+            _accountTypeDao.Setup(dao => dao.FindById(It.IsAny<long>()));
+
+            var result = _accountService.Update(account);
+
+            Assert.True(result.IsSuccess());
+            Assert.AreEqual(account, result.GetPayload());
+
+            _accountDao.Verify(dao => dao.GetById(It.IsAny<long>()));
+            _accountDao.Verify(dao => dao.Update(It.IsAny<Account>()));
+            _providerDao.Verify(dao => dao.GetById(It.IsAny<long>()));
+            _accountTypeDao.Verify(dao => dao.FindById(It.IsAny<long>()));
+
+            _accountDao.VerifyNoOtherCalls();
+            _providerDao.VerifyNoOtherCalls();
+            _accountTypeDao.VerifyNoOtherCalls();
+
+        }
         // ------------------------------------------------------------------------------------------------------------
 
         private static long CalculateRandomId()
@@ -232,6 +302,25 @@ namespace BalanceWebApp.Tests.Services
                 Provider = "provider",
                 ProviderCountry = "GT",
                 ProviderId = 0
+            };
+        }
+
+        private static Provider BuildProvider()
+        {
+            return new Provider()
+            {
+                Id = 10,
+                Name = "provider",
+                Country = "GT"
+            };
+        }
+
+        private static AccountType BuildAccountType()
+        {
+            return new AccountType()
+            {
+                Id = 10,
+                Name = "account type"
             };
         }
     }
