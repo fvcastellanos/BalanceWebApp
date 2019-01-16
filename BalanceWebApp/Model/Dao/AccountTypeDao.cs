@@ -11,7 +11,7 @@ namespace BalanceWebApp.Model.Dao
         {
         }
 
-        public List<AccountType> FindAll()
+        public IList<AccountType> FindAll()
         {
             return GetConnection().Query<AccountType>("select id, name from account_type").AsList();
         }

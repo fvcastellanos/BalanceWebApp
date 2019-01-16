@@ -1,11 +1,11 @@
 using System;
-using System.Collections.Generic;
 using BalanceWebApp.Model.Dao;
 using BalanceWebApp.Model.Domain;
 using BalanceWebApp.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using static BalanceWebApp.Tests.Fixture.ModelFixture;
 
 namespace BalanceWebApp.Tests.Services 
 {
@@ -250,12 +250,6 @@ namespace BalanceWebApp.Tests.Services
         }
         // ------------------------------------------------------------------------------------------------------------
 
-        private static long CalculateRandomId()
-        {
-            var random = new Random();
-            return random.Next(1, 300);
-        }
-
         private void ExpectAccountList()
         {
             _accountDao.Setup(dao => dao.GetAll())
@@ -277,48 +271,6 @@ namespace BalanceWebApp.Tests.Services
         {
             _accountDao.Setup(dao => dao.GetById(id))
                 .Returns(account);
-        }
-
-        private static ICollection<Account> BuildAccountList()
-        {
-            var list = new List<Account> { BuildAccount() };
-
-            return list;
-        }
-
-        private static Account BuildAccount()
-        {
-            return new Account()
-            {
-                AccountNumber = "123",
-                AccountType = "type",
-                AccountTypeId = 0,
-                Balance = 100,
-                Id = 0,
-                Name = "name",
-                Provider = "provider",
-                ProviderCountry = "GT",
-                ProviderId = 0
-            };
-        }
-
-        private static Provider BuildProvider()
-        {
-            return new Provider()
-            {
-                Id = 10,
-                Name = "provider",
-                Country = "GT"
-            };
-        }
-
-        private static AccountType BuildAccountType()
-        {
-            return new AccountType()
-            {
-                Id = 10,
-                Name = "account type"
-            };
         }
     }
 }

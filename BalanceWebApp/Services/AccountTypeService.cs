@@ -17,19 +17,19 @@ namespace BalanceWebApp.Services
             _logger = logger;
         }
 
-        public Result<string, List<AccountType>> GetAccountTypes()
+        public Result<string, IList<AccountType>> GetAccountTypes()
         {
             try
             {
                 _logger.LogInformation("Getting all the account types");
                 var list = _accountTypeDao.FindAll();
 
-                return Result<string, List<AccountType>>.ForSuccess(list);
+                return Result<string, IList<AccountType>>.ForSuccess(list);
             }
             catch(Exception ex)
             {
                 _logger.LogError("Unable to get the account types, {0}", ex);
-                return Result<string, List<AccountType>>.ForFailure("Can't get the account types");
+                return Result<string, IList<AccountType>>.ForFailure("Can't get the account types");
             }
         }
 

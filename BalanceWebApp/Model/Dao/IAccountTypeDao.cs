@@ -5,7 +5,7 @@ namespace BalanceWebApp.Model.Dao
 {
     public interface IAccountTypeDao
     {
-        List<AccountType> FindAll();
+        IList<AccountType> FindAll();
         AccountType FindById(long id);
         AccountType FindByName(string name);
         long AddNew(string name);
