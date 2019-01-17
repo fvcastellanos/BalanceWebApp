@@ -45,6 +45,11 @@ namespace BalanceWebApp.Tests.Fixture
             };
         }
 
+        public static IList<Provider> BuildProviderList()
+        {
+            return new List<Provider>() { BuildProvider() };
+        }
+
         public static AccountType BuildAccountType()
         {
             return new AccountType()

@@ -18,19 +18,19 @@ namespace BalanceWebApp.Services
             _providerDao = providerDao;
         }
 
-        public Result<string, List<Provider>> GetAll()
+        public Result<string, IList<Provider>> GetAll()
         {
             try
             {
                 _logger.LogInformation("Getting all the providers");
                 var providers = _providerDao.GetAll();
 
-                return Result<string, List<Provider>>.ForSuccess(providers);
+                return Result<string, IList<Provider>>.ForSuccess(providers);
             }
             catch(Exception ex)
             {
                 _logger.LogError("Exception: ", ex);
-                return Result<string, List<Provider>>.ForFailure("Can't get providers");
+                return Result<string, IList<Provider>>.ForFailure("Can't get providers");
             }
         }
 
@@ -56,19 +56,19 @@ namespace BalanceWebApp.Services
             }
         }
 
-        public Result<string, List<Provider>> GetByCountry(string country)
+        public Result<string, IList<Provider>> GetByCountry(string country)
         {
             try
             {
                 _logger.LogInformation("Getting provider for country: {0}", country);
                 var providers = _providerDao.GetByCountry(country);
 
-                return Result<string, List<Provider>>.ForSuccess(providers);
+                return Result<string, IList<Provider>>.ForSuccess(providers);
             }
             catch(Exception ex)
             {
                 _logger.LogError("Can't get providers by country: ", ex);
-                return Result<string, List<Provider>>.ForFailure("Can't get provider by selected country");
+                return Result<string, IList<Provider>>.ForFailure("Can't get provider by selected country");
             }
         }
 

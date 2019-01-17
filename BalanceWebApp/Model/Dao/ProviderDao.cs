@@ -20,7 +20,7 @@ namespace BalanceWebApp.Model.Dao
         {
         }
 
-        public List<Provider> GetAll()
+        public IList<Provider> GetAll()
         {
             using (var db = GetConnection())
             {
@@ -28,7 +28,7 @@ namespace BalanceWebApp.Model.Dao
             }
         }
 
-        public List<Provider> GetByCountry(string country)
+        public IList<Provider> GetByCountry(string country)
         {
             using (var db = GetConnection())
             {
