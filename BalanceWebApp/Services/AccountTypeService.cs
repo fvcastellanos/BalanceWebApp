@@ -47,7 +47,7 @@ namespace BalanceWebApp.Services
             } catch(Exception ex)
             {
                 _logger.LogError("Unable to get the account type: {0}, due: {1}", id, ex);
-                return Result<string, AccountType>.ForFailure("Can't get the account type requested");
+                return Result<string, AccountType>.ForFailure("Can't get account type");
             }
         }
 
