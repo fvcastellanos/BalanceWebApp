@@ -1,4 +1,4 @@
 #!/bin/sh
 
-dotnet restore
+# dotnet restore
 dotnet test -v n
