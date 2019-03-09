@@ -15,6 +15,8 @@ namespace BalanceWebApp.Tests.Services
 
         private Mock<IAccountTypeDao> _accountTypeDaoMock;
 
+        private string user;
+
         [SetUp]
         public void SetUp()
         {
@@ -22,20 +24,22 @@ namespace BalanceWebApp.Tests.Services
             var logger = new Logger<AccountTypeService>(new LoggerFactory());
             
             _accountTypeService = new AccountTypeService(logger, _accountTypeDaoMock.Object);
+
+            user = "super-user";
         }
 
         [Test]
         public void GetAccountTypesThrowsExceptionTest()
         {
-            _accountTypeDaoMock.Setup(dao => dao.FindAll())
+            _accountTypeDaoMock.Setup(dao => dao.FindAll(user))
                 .Throws(new Exception("expected exception"));
 
-            var result = _accountTypeService.GetAccountTypes();
+            var result = _accountTypeService.GetAccountTypes(user);
             
             Assert.True(result.HasErrors());
             Assert.AreEqual("Can't get the account types", result.GetFailure());
 
-            _accountTypeDaoMock.Verify(dao => dao.FindAll());
+            _accountTypeDaoMock.Verify(dao => dao.FindAll(user));
             _accountTypeDaoMock.VerifyNoOtherCalls();
         }
 
@@ -44,15 +48,15 @@ namespace BalanceWebApp.Tests.Services
         {
             var expectedAccountTypeList = BuildAccountTypeList();
 
-            _accountTypeDaoMock.Setup(dao => dao.FindAll())
+            _accountTypeDaoMock.Setup(dao => dao.FindAll(user))
                 .Returns(expectedAccountTypeList);
 
-            var result = _accountTypeService.GetAccountTypes();
+            var result = _accountTypeService.GetAccountTypes(user);
             
             Assert.True(result.IsSuccess());
             Assert.NotNull(result.GetPayload());
 
-            _accountTypeDaoMock.Verify(dao => dao.FindAll());
+            _accountTypeDaoMock.Verify(dao => dao.FindAll(user));
             _accountTypeDaoMock.VerifyNoOtherCalls();
         }
 

@@ -26,30 +26,30 @@ DROP TABLE `account_balance`.`user`;
 
 ALTER TABLE `account_balance`.`account` 
 DROP COLUMN `balance`,
-ADD COLUMN `tenant` VARCHAR(150) NOT NULL AFTER `account_number`,
+ADD COLUMN `tenant` VARCHAR(150) NOT NULL DEFAULT '' AFTER `account_number`,
 ADD INDEX `idx_account_tenant` (`tenant` ASC);
 
 ALTER TABLE `account_balance`.`account_type` 
-ADD COLUMN `tenant` VARCHAR(150) NOT NULL AFTER `name`,
+ADD COLUMN `tenant` VARCHAR(150) NOT NULL DEFAULT '' AFTER `name`,
 ADD INDEX `idx_account_type_tenant` (`tenant` ASC);
 
 ALTER TABLE `account_balance`.`provider` 
-ADD COLUMN `tenant` VARCHAR(150) NOT NULL AFTER `country`,
+ADD COLUMN `tenant` VARCHAR(150) NOT NULL DEFAULT '' AFTER `country`,
 ADD INDEX `idx_provider_tenant` (`tenant` ASC);
 
 ALTER TABLE `account_balance`.`scheduled_transaction` 
-ADD COLUMN `tenant` VARCHAR(150) NOT NULL AFTER `amount`,
+ADD COLUMN `tenant` VARCHAR(150) NOT NULL DEFAULT '' AFTER `amount`,
 ADD INDEX `idx_scheduled_transaction_tenant` (`tenant` ASC);
 
 ALTER TABLE `account_balance`.`transaction` 
-ADD COLUMN `tenant` VARCHAR(150) NOT NULL AFTER `currency`,
+ADD COLUMN `tenant` VARCHAR(150) NOT NULL DEFAULT '' AFTER `currency`,
 ADD INDEX `idx_transaction_tenant` (`tenant` ASC);
 
 ALTER TABLE `account_balance`.`transaction_detail` 
-ADD COLUMN `tenant` VARCHAR(150) NOT NULL AFTER `image_path`,
+ADD COLUMN `tenant` VARCHAR(150) NOT NULL DEFAULT '' AFTER `image_path`,
 ADD INDEX `idx_transaction_detail_tenant` (`tenant` ASC);
 
 ALTER TABLE `account_balance`.`transaction_type` 
-ADD COLUMN `tenant` VARCHAR(150) NOT NULL AFTER `credit`,
+ADD COLUMN `tenant` VARCHAR(150) NOT NULL DEFAULT '' AFTER `credit`,
 ADD INDEX `idx_transaction_type_tenant` (`tenant` ASC);
 

@@ -17,12 +17,12 @@ namespace BalanceWebApp.Services
             _logger = logger;
         }
 
-        public Result<string, IList<AccountType>> GetAccountTypes()
+        public Result<string, IList<AccountType>> GetAccountTypes(string user)
         {
             try
             {
                 _logger.LogInformation("Getting all the account types");
-                var list = _accountTypeDao.FindAll();
+                var list = _accountTypeDao.FindAll(user);
 
                 return Result<string, IList<AccountType>>.ForSuccess(list);
             }
@@ -51,12 +51,12 @@ namespace BalanceWebApp.Services
             }
         }
 
-        public Result<string, AccountType> New(string name)
+        public Result<string, AccountType> New(string name, string user)
         {
             try
             {
                 _logger.LogInformation("Adding new account type: {0}", name);
-                var value = _accountTypeDao.AddNew(name);
+                var value = _accountTypeDao.AddNew(name, user);
 
                 var accountTypeHolder = _accountTypeDao.FindById(value);
                 
@@ -98,7 +98,6 @@ namespace BalanceWebApp.Services
                 _logger.LogError("Unable to update account type with id: {0}, due: {1}", accountType, ex);
                 return Result<string, AccountType>.ForFailure("Can't update account type");
             }
-            
         }
     }
 }

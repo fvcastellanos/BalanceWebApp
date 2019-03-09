@@ -17,7 +17,8 @@ namespace BalanceWebApp.Tests.Services
         private Mock<IProviderDao> _providerDao;
 
         private Mock<IAccountTypeDao> _accountTypeDao;
-        
+
+        private string user;
         [SetUp]
         public void SetUp()
         {
@@ -28,34 +29,35 @@ namespace BalanceWebApp.Tests.Services
             var logger = new Logger<AccountService>(new LoggerFactory());
             
             _accountService = new AccountService(logger, _accountDao.Object, _providerDao.Object, _accountTypeDao.Object);
+            user = "super-user";
         }
 
         [Test]
         public void TestGetAll()
         {
-            ExpectAccountList();
+            ExpectAccountList(user);
 
-            var result = _accountService.GetAll();
+            var result = _accountService.GetAll(user);
             
             Assert.True(result.IsSuccess());
             Assert.NotNull(result.GetPayload());
             
-            _accountDao.Verify(dao => dao.GetAll());
+            _accountDao.Verify(dao => dao.GetAll(user));
             _accountDao.VerifyNoOtherCalls();
         }
 
         [Test]
         public void TestGetAllThrowsException()
         {
-            _accountDao.Setup(dao => dao.GetAll())
+            _accountDao.Setup(dao => dao.GetAll(user))
                 .Throws(new Exception("expected exception"));
 
-            var result = _accountService.GetAll();
+            var result = _accountService.GetAll(user);
             
             Assert.True(result.HasErrors());
             Assert.AreEqual("Can't get accounts", result.GetFailure());
             
-            _accountDao.Verify(dao => dao.GetAll());
+            _accountDao.Verify(dao => dao.GetAll(user));
             _accountDao.VerifyNoOtherCalls();
         }
 
@@ -95,20 +97,20 @@ namespace BalanceWebApp.Tests.Services
         {
             var expectedAccount = BuildAccount();
             
-            var id = ExpectSuccessAccountCreation();
+            var id = ExpectSuccessAccountCreation(user);
             ExpectAccountForId(expectedAccount, id);
 
-            _accountDao.Setup(dao => dao.GetAccount(0, 0, "123"));
+            _accountDao.Setup(dao => dao.GetAccount(0, 0, "123", user));
             
-            var result = _accountService.AddNew(0, 0, "name", "123");
+            var result = _accountService.AddNew(0, 0, "name", "123", user);
             
             Assert.True(result.IsSuccess());
             Assert.AreEqual(expectedAccount, result.GetPayload());
 
             _accountDao.Verify(dao => dao.CreateAccount(It.IsAny<long>(), It.IsAny<long>(),
-                It.IsAny<string>(), It.IsAny<string>()));
+                It.IsAny<string>(), It.IsAny<string>(), user));
 
-            _accountDao.Verify(dao => dao.GetAccount(0, 0, "123"));
+            _accountDao.Verify(dao => dao.GetAccount(0, 0, "123", user));
             _accountDao.Verify(dao => dao.GetById(id));
 
             _accountDao.VerifyNoOtherCalls();
@@ -119,30 +121,30 @@ namespace BalanceWebApp.Tests.Services
         {
             var account = BuildAccount();
 
-            _accountDao.Setup(dao => dao.GetAccount(0, 0, "123"))
+            _accountDao.Setup(dao => dao.GetAccount(0, 0, "123", user))
                 .Returns(account);
 
-            var result = _accountService.AddNew(0, 0, "name", "123");
+            var result = _accountService.AddNew(0, 0, "name", "123", user);
             
             Assert.True(result.HasErrors());
             Assert.AreEqual("Looks like the account already exists", result.GetFailure());
 
-            _accountDao.Verify(dao => dao.GetAccount(0, 0, "123"));
+            _accountDao.Verify(dao => dao.GetAccount(0, 0, "123", user));
             _accountDao.VerifyNoOtherCalls();
         }
 
         [Test]
         public void TestAddNewThrowsException()
         {
-            _accountDao.Setup(dao => dao.GetAccount(0, 0, "123"))
+            _accountDao.Setup(dao => dao.GetAccount(0, 0, "123", user))
                 .Throws(new Exception("expected exception"));
             
-            var result = _accountService.AddNew(0, 0, "name", "123");
+            var result = _accountService.AddNew(0, 0, "name", "123", user);
             
             Assert.True(result.HasErrors());
             Assert.AreEqual("Can't create new account", result.GetFailure());
 
-            _accountDao.Verify(dao => dao.GetAccount(0, 0, "123"));
+            _accountDao.Verify(dao => dao.GetAccount(0, 0, "123", user));
             _accountDao.VerifyNoOtherCalls();
         }
 
@@ -250,18 +252,18 @@ namespace BalanceWebApp.Tests.Services
         }
         // ------------------------------------------------------------------------------------------------------------
 
-        private void ExpectAccountList()
+        private void ExpectAccountList(string user)
         {
-            _accountDao.Setup(dao => dao.GetAll())
+            _accountDao.Setup(dao => dao.GetAll(user))
                 .Returns(BuildAccountList);
         }
 
-        private long ExpectSuccessAccountCreation()
+        private long ExpectSuccessAccountCreation(string user)
         {
             var id = CalculateRandomId();
 
             _accountDao.Setup(dao => dao.CreateAccount(It.IsAny<long>(), It.IsAny<long>(),
-                    It.IsAny<string>(), It.IsAny<string>()))
+                    It.IsAny<string>(), It.IsAny<string>(), user))
                 .Returns(id);
 
             return id;

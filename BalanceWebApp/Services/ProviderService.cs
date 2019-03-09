@@ -18,12 +18,12 @@ namespace BalanceWebApp.Services
             _providerDao = providerDao;
         }
 
-        public Result<string, IList<Provider>> GetAll()
+        public Result<string, IList<Provider>> GetAll(string user)
         {
             try
             {
                 _logger.LogInformation("Getting all the providers");
-                var providers = _providerDao.GetAll();
+                var providers = _providerDao.GetAll(user);
 
                 return Result<string, IList<Provider>>.ForSuccess(providers);
             }
@@ -56,12 +56,12 @@ namespace BalanceWebApp.Services
             }
         }
 
-        public Result<string, IList<Provider>> GetByCountry(string country)
+        public Result<string, IList<Provider>> GetByCountry(string country, string user)
         {
             try
             {
                 _logger.LogInformation("Getting provider for country: {0}", country);
-                var providers = _providerDao.GetByCountry(country);
+                var providers = _providerDao.GetByCountry(country, user);
 
                 return Result<string, IList<Provider>>.ForSuccess(providers);
             }
@@ -72,10 +72,10 @@ namespace BalanceWebApp.Services
             }
         }
 
-        public Result<string, Provider> New(Provider provider) {
+        public Result<string, Provider> New(Provider provider, string user) {
             try
             {
-                var providerHolder = _providerDao.FindProvider(provider.Name, provider.Country);
+                var providerHolder = _providerDao.FindProvider(provider.Name, provider.Country, user);
                 if (providerHolder != null)
                 {
                     _logger.LogError("Provider: {0} - {1} already exists", provider.Name, provider.Country);
@@ -83,7 +83,7 @@ namespace BalanceWebApp.Services
                 }
                 
                 _logger.LogInformation("Adding a new provider with name: {0} and country: {1}", provider.Name, provider.Country);
-                var id = _providerDao.New(provider.Name, provider.Country);
+                var id = _providerDao.New(provider.Name, provider.Country, user);
                 var newProviderHolder = _providerDao.GetById(id);
 
                 return Result<string, Provider>.ForSuccess(newProviderHolder);

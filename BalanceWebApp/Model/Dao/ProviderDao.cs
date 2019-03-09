@@ -9,30 +9,30 @@ namespace BalanceWebApp.Model.Dao
 
     public class ProviderDao : BaseDao, IProviderDao
     {
-        private static string GET_ALL = "select * from provider";
-        private static string GET_BY_COUNTRY = "select * from provider where country = @Country";
+        private static string GET_ALL = "select * from provider where tenant = @User";
+        private static string GET_BY_COUNTRY = "select * from provider where country = @Country and tenant = @User";
         private static string GET_BY_ID = "select * from provider where id = @Id";
-        private static string FIND_PROVIDER = "select * from provider where name = @Name and country = @Country";
-        private static string NEW = "insert into provider (name, country) values (@Name, @Country)";
+        private static string FIND_PROVIDER = "select * from provider where name = @Name and country = @Country and tenant = @User";
+        private static string NEW = "insert into provider (name, country, tenant) values (@Name, @Country, @User)";
         private static string DELETE = "delete from provider where id = @Id";
 
         public ProviderDao(ConnectionFactory connectionFactory) : base(connectionFactory)
         {
         }
 
-        public IList<Provider> GetAll()
+        public IList<Provider> GetAll(string user)
         {
             using (var db = GetConnection())
             {
-                return db.Query<Provider>(GET_ALL).AsList();    
+                return db.Query<Provider>(GET_ALL, new { User = user }).AsList();    
             }
         }
 
-        public IList<Provider> GetByCountry(string country)
+        public IList<Provider> GetByCountry(string country, string user)
         {
             using (var db = GetConnection())
             {
-                return db.Query<Provider>(GET_BY_COUNTRY, new { Country = country }).AsList();                
+                return db.Query<Provider>(GET_BY_COUNTRY, new { Country = country, User = user }).AsList();                
             }
         }
 
@@ -44,18 +44,18 @@ namespace BalanceWebApp.Model.Dao
             }
         }
 
-        public Provider FindProvider(string name, string country)
+        public Provider FindProvider(string name, string country, string user)
         {
             using (var db = GetConnection())
             {
-                return db.QuerySingleOrDefault<Provider>(FIND_PROVIDER, new { Name = name, Country = country });                
+                return db.QuerySingleOrDefault<Provider>(FIND_PROVIDER, new { Name = name, Country = country, User = user });                
             }
         }
 
-        public long New(string name, string country)
+        public long New(string name, string country, string user)
         {
             long id = 0;
-            var rows = GetConnection().Execute(NEW, new { Name = name, Country = country});
+            var rows = GetConnection().Execute(NEW, new { Name = name, Country = country, User = user });
             if(rows > 0) {
                 id = GetLasInsertedId();
             }

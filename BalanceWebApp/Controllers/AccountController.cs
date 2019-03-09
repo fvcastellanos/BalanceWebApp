@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using BalanceWebApp.Model.Domain;
 using BalanceWebApp.Model.Views;
 using BalanceWebApp.Model.Views.Accounts;
@@ -34,13 +35,14 @@ namespace BalanceWebApp.Controllers
 
         public IActionResult Index()
         {
-            var result = _accountService.GetAll();
-
+            var user = GetAuthenticatedUserId();
+            var result = _accountService.GetAll(user);
             IndexViewModel model;
             if (result.HasErrors())
             {
                 model = new IndexViewModel()
                 {
+                    Accounts = new List<Account>(),
                     Message = result.GetFailure()
                 };
                 
@@ -75,7 +77,8 @@ namespace BalanceWebApp.Controllers
                 return View("New", model);
             }
 
-            var result = _accountService.AddNew(model.AccountTypeId, model.ProviderId, model.Name, model.Number);
+            var user = GetAuthenticatedUserId();
+            var result = _accountService.AddNew(model.AccountTypeId, model.ProviderId, model.Name, model.Number, user);
 
             if (result.HasErrors())
             {
@@ -162,32 +165,28 @@ namespace BalanceWebApp.Controllers
 
         private IEnumerable<Option> GetProviders()
         {
-            var result = _providerService.GetAll();
+            var user = GetAuthenticatedUserId();
+            var result = _providerService.GetAll(user);
 
-            if (result.IsSuccess())
-            {
-                var list = from p in result.GetPayload()
-                    select new Option(p.Id.ToString(), p.Country + " - " + p.Name);
-
-                return list.ToList();
-            }
+            if (result.HasErrors()) return new List<Option>();
             
-            return new List<Option>();
+            var list = from p in result.GetPayload()
+                select new Option(p.Id.ToString(), p.Country + " - " + p.Name);
+
+            return list.ToList();
         }
 
         private IEnumerable<Option> GetAccountTypes()
         {
-            var result = _accountTypeService.GetAccountTypes();
+            var user = GetAuthenticatedUserId();
+            var result = _accountTypeService.GetAccountTypes(user);
 
-            if (result.IsSuccess())
-            {
-                var list = from at in result.GetPayload()
-                    select new Option(at.Id.ToString(), at.Name);
+            if (result.HasErrors()) return new List<Option>();
+            
+            var list = from at in result.GetPayload()
+                select new Option(at.Id.ToString(), at.Name);
 
-                return list.ToList();
-            }
-
-            return new List<Option>();
+            return list.ToList();
         }
     }
 }

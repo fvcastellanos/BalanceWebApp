@@ -11,15 +11,16 @@ namespace BalanceWebApp.Model.Dao
         {
         }
 
-        public ICollection<Account> GetAll()
+        public ICollection<Account> GetAll(string user)
         {
             var query = "select a.id, a.account_type_id AccountTypeId, at.name AccountType, a.provider_id ProviderId, p.name Provider, " +
-                "  a.name, a.account_number AccountNumber, a.balance, p.country ProviderCountry " +
+                "  a.name, a.account_number AccountNumber, p.country ProviderCountry " +
                 " from account a " +
                 "   inner join account_type at on a.account_type_id = at.id " +
-                "   inner join provider p on a.provider_id = p.id";
+                "   inner join provider p on a.provider_id = p.id " +
+                " where a.tenant = @User";
 
-            var accounts = GetConnection().Query<Account>(query).AsList();
+            var accounts = GetConnection().Query<Account>(query, new { User = user }).AsList();
 
             return accounts;
         }
@@ -38,41 +39,41 @@ namespace BalanceWebApp.Model.Dao
             return account;
         }
 
-        public Account GetByAccountNumber(string number)
+        public Account GetByAccountNumber(string number, string user)
         {
             var query = "select a.id, a.account_type_id AccountTypeId, at.name AccountType, a.provider_id ProviderId, p.name Provider, " +
                 "  a.name, a.account_number AccountNumber, a.balance, p.country ProviderCountry " +
                 " from account a " +
                 "   inner join account_type at on a.account_type_id = at.id " +
                 "   inner join provider p on a.provider_id = p.id " +
-                " where a.account_number = @Number";
+                " where a.account_number = @Number and a.tenant = @User";
 
-            var account = GetConnection().Query<Account>(query, new { Number = number }).SingleOrDefault<Account>();
+            var account = GetConnection().Query<Account>(query, new { Number = number, User = user }).SingleOrDefault<Account>();
 
             return account;
         }
 
-        public Account GetAccount(long accountTypeId, long providerId, string accountNumber)
+        public Account GetAccount(long accountTypeId, long providerId, string accountNumber, string user)
         {
             var query = "select a.id, a.account_type_id AccountTypeId, at.name AccountType, a.provider_id ProviderId, p.name Provider, " +
                 "  a.name, a.account_number AccountNumber, a.balance, p.country ProviderCountry " +
                 " from account a " +
                 "   inner join account_type at on a.account_type_id = at.id " +
                 "   inner join provider p on a.provider_id = p.id " +
-                " where a.account_number = @Number and a.account_type_id = @AccountTypeId and a.provider_id = @ProviderId";
+                " where a.account_number = @Number and a.account_type_id = @AccountTypeId and a.provider_id = @ProviderId and a.tenant = @User";
 
-            var account = GetConnection().Query<Account>(query, new { Number = accountNumber, AccountTypeId = accountTypeId, ProviderId = providerId })
+            var account = GetConnection().Query<Account>(query, new { Number = accountNumber, AccountTypeId = accountTypeId, ProviderId = providerId, User = user })
                     .SingleOrDefault<Account>();
 
             return account;
         }
 
-        public long CreateAccount(long accountTypeId, long providerId, string name, string accountNumber)
+        public long CreateAccount(long accountTypeId, long providerId, string name, string accountNumber, string user)
         {
-            var query = "insert into account (account_type_id, provider_id, name, account_number) " +
-                "  values (@AccountTypeId, @ProviderId, @Name, @AccountNumber) ";
+            var query = "insert into account (account_type_id, provider_id, name, account_number, tenant) " +
+                "  values (@AccountTypeId, @ProviderId, @Name, @AccountNumber, @User) ";
 
-            var rows = GetConnection().Execute(query, new { AccountNumber = accountNumber, AccountTypeId = accountTypeId, ProviderId = providerId, Name = name });
+            var rows = GetConnection().Execute(query, new { AccountNumber = accountNumber, AccountTypeId = accountTypeId, ProviderId = providerId, Name = name, User = user });
             
             return rows > 0 ? GetLasInsertedId() : 0;
         }

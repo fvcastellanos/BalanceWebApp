@@ -18,12 +18,12 @@ namespace BalanceWebApp.Services
             _transactionTypeDao = transactionTypeDao;
         }
 
-        public Result<string, List<TransactionType>> GetAll() 
+        public Result<string, List<TransactionType>> GetAll(string user) 
         {
             try 
             {
                 _logger.LogInformation("Getting all the transaction types");
-                var list = _transactionTypeDao.GetAll();
+                var list = _transactionTypeDao.GetAll(user);
 
                 return Result<string, List<TransactionType>>.ForSuccess(list); 
             }
@@ -50,12 +50,12 @@ namespace BalanceWebApp.Services
             }
         }
 
-        public Result<string, TransactionType> New(TransactionType transactionType)
+        public Result<string, TransactionType> New(TransactionType transactionType, string user)
         {
             try 
             {
                 _logger.LogInformation("Adding a new transaction type");
-                var id = _transactionTypeDao.New(transactionType);
+                var id = _transactionTypeDao.New(transactionType, user);
                 
                 if (id == 0) return Result<string, TransactionType>.ForFailure("Can't create new account type");
 

@@ -25,7 +25,8 @@ namespace BalanceWebApp.Controllers
         // GET
         public IActionResult Index()
         {
-            var result = _providerService.GetAll();
+            var user = GetAuthenticatedUserId();
+            var result = _providerService.GetAll(user);
 
             IndexViewModel model;
             
@@ -69,7 +70,8 @@ namespace BalanceWebApp.Controllers
                 Name = model.Name
             };
 
-            var result = _providerService.New(provider);
+            var user = GetAuthenticatedUserId();
+            var result = _providerService.New(provider, user);
 
             if (result.HasErrors())
             {

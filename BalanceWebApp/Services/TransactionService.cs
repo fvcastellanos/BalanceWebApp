@@ -62,7 +62,7 @@ namespace BalanceWebApp.Services
             }
         }
 
-        public Result<string, Transaction> Add(Transaction transaction)
+        public Result<string, Transaction> Add(Transaction transaction, string user)
         {
             try
             {
@@ -74,7 +74,7 @@ namespace BalanceWebApp.Services
                 if (!AccountExists(transaction.AccountId))
                     return Result<string, Transaction>.ForFailure("Account not found");
 
-                var id = _transactionDao.Add(transaction);
+                var id = _transactionDao.Add(transaction, user);
                 
                 var savedTransaction = _transactionDao.GetTransaction(id);
                 

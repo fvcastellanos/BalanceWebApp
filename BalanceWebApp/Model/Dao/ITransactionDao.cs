@@ -7,7 +7,7 @@ namespace BalanceWebApp.Model.Dao
     {
         IList<Transaction> GetTransactions(long accountId, DateTime start, DateTime end);
         Transaction GetTransaction(long id);
-        long Add(Transaction transaction);
+        long Add(Transaction transaction, string user);
         void Update(Transaction transaction);
         void Delete(long id);
     }

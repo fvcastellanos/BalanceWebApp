@@ -11,9 +11,10 @@ namespace BalanceWebApp.Model.Dao
         {
         }
 
-        public IList<AccountType> FindAll()
+        public IList<AccountType> FindAll(string user)
         {
-            return GetConnection().Query<AccountType>("select id, name from account_type").AsList();
+            return GetConnection().Query<AccountType>("select id, name from account_type where tenant = @User", 
+                new { User = user }).AsList();
         }
 
         public AccountType FindById(long id)
@@ -23,18 +24,18 @@ namespace BalanceWebApp.Model.Dao
             return accountType;
         }
 
-        public AccountType FindByName(string name)
+        public AccountType FindByName(string name, string user)
         {
             var accountType = GetConnection().QuerySingleOrDefault<AccountType>("select id, name from account_type " +
-                " where name = @Name", new { Name = name });
+                " where name = @Name and tenant = @User", new { Name = name, User = user });
             
             return accountType;
         }
 
-        public long AddNew(string name)
+        public long AddNew(string name, string user)
         {
             long id = 0;
-            var rows = GetConnection().Execute("insert into account_type (name) values (@Name)", new { Name = name });
+            var rows = GetConnection().Execute("insert into account_type (name, tenant) values (@Name, @User)", new { Name = name, User = user });
             if (rows > 0) {
                 id = GetConnection().Query<long>("select LAST_INSERT_ID()").Single();
             }

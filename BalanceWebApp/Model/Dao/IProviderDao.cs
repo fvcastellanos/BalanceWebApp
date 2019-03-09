@@ -5,11 +5,11 @@ namespace BalanceWebApp.Model.Dao
 {
     public interface IProviderDao
     {
-        IList<Provider> GetAll();
-        IList<Provider> GetByCountry(string country);
+        IList<Provider> GetAll(string user);
+        IList<Provider> GetByCountry(string country, string user);
         Provider GetById(long id);
-        Provider FindProvider(string name, string country);
-        long New(string name, string country);
+        Provider FindProvider(string name, string country, string user);
+        long New(string name, string country, string user);
         int Delete(long id);
         Provider Update(Provider provider);
     }

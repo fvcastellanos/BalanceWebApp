@@ -11,9 +11,10 @@ namespace BalanceWebApp.Model.Dao
         {
         }
 
-        public List<TransactionType> GetAll()
+        public List<TransactionType> GetAll(string user)
         {
-            return GetConnection().Query<TransactionType>("select * from transaction_type").AsList();
+            return GetConnection().Query<TransactionType>("select * from transaction_type where tenant = @User",
+                    new { User = user }).AsList();
         }
 
         public TransactionType GetById(long id)
@@ -22,12 +23,12 @@ namespace BalanceWebApp.Model.Dao
                 new { Id = id }).SingleOrDefault();
         }
 
-        public long New(TransactionType transactionType)
+        public long New(TransactionType transactionType, string user)
         {
             long id = 0;
 
-            var rows = GetConnection().Execute("insert into transaction_type (name, credit) values (@Name, @Credit)",
-                new {transactionType.Name, transactionType.Credit });
+            var rows = GetConnection().Execute("insert into transaction_type (name, credit) values (@Name, @Credit, @User)",
+                new {transactionType.Name, transactionType.Credit, User = user });
                 
             if(rows > 0)
             {

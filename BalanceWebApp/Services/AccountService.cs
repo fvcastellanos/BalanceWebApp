@@ -22,12 +22,12 @@ namespace BalanceWebApp.Services
             _logger = logger;
         }
         
-        public Result<string, ICollection<Account>> GetAll()
+        public Result<string, ICollection<Account>> GetAll(string user)
         {
             try
             {
                 _logger.LogInformation("Getting accounts");
-                var accounts = _accountDao.GetAll();
+                var accounts = _accountDao.GetAll(user);
 
                 return Result<string, ICollection<Account>>.ForSuccess(accounts);
             }
@@ -56,15 +56,15 @@ namespace BalanceWebApp.Services
             }
         }
 
-        public Result<string, Account> AddNew(long accountTypeId, long providerId, string name, string number)
+        public Result<string, Account> AddNew(long accountTypeId, long providerId, string name, string number, string user)
         {
             try
             {
-                var accountHolder = _accountDao.GetAccount(accountTypeId, providerId, number);
+                var accountHolder = _accountDao.GetAccount(accountTypeId, providerId, number, user);
 
                 if (accountHolder != null) return Result<string, Account>.ForFailure("Looks like the account already exists");
 
-                var id = _accountDao.CreateAccount(accountTypeId, providerId, name, number);
+                var id = _accountDao.CreateAccount(accountTypeId, providerId, name, number, user);
 
                 var createdAccount = _accountDao.GetById(id);
                 return Result<string, Account>.ForSuccess(createdAccount);

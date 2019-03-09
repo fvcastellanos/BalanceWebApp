@@ -22,7 +22,8 @@ namespace BalanceWebApp.Controllers
 
         public IActionResult Index()
         {
-            var result = _accountTypeService.GetAccountTypes();
+            var user = GetAuthenticatedUserId();
+            var result = _accountTypeService.GetAccountTypes(user);
 
             IndexViewModel model;
 
@@ -51,7 +52,8 @@ namespace BalanceWebApp.Controllers
                 return View("New", model);
             }
 
-            var result = _accountTypeService.New(model.Name);
+            var user = GetAuthenticatedUserId();
+            var result = _accountTypeService.New(model.Name, user);
 
             if (result.HasErrors())
             {

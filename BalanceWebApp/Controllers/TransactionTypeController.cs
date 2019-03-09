@@ -25,7 +25,7 @@ namespace BalanceWebApp.Controllers
 
         public IActionResult Index()
         {
-            var result = _transactionTypeService.GetAll();
+            var result = _transactionTypeService.GetAll(GetAuthenticatedUserId());
 
             IndexViewModel model;
             if (result.HasErrors())
@@ -75,7 +75,7 @@ namespace BalanceWebApp.Controllers
                 Credit = model.Type.Equals("C") ? true : false
             };
 
-            var result = _transactionTypeService.New(transactionType);
+            var result = _transactionTypeService.New(transactionType, GetAuthenticatedUserId());
 
             if (result.HasErrors())
             {

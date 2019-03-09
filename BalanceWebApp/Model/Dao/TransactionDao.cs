@@ -47,17 +47,17 @@ namespace BalanceWebApp.Model.Dao
             
         }
         
-        public long Add(Transaction transaction)
+        public long Add(Transaction transaction, string user)
         {
             using (var db = GetConnection())
             {
                 var sql = "insert into transaction " +
-                    " (transaction_type_id, account_id, date, description, amount, currency) " +
-                    " values (@TransactionTypeId, @AccountId, @Date, @Description, @Amount, @Currency)";
+                    " (transaction_type_id, account_id, date, description, amount, currency, tenant) " +
+                    " values (@TransactionTypeId, @AccountId, @Date, @Description, @Amount, @Currency, @User)";
                 
                 db.Execute(sql, new { Id = transaction.Id, @TransactionTypeId = transaction.TransactionTypeId,
                     AccountId = transaction.AccountId, Date = transaction.Date, Description = transaction.Description,
-                    Amount = transaction.Amount, Currency = transaction.Currency });
+                    Amount = transaction.Amount, Currency = transaction.Currency, User = user });
 
                 return GetLasInsertedId();
             }

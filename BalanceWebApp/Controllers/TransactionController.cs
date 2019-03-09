@@ -116,7 +116,7 @@ namespace BalanceWebApp.Controllers
                 Amount = model.Amount
             };
             
-            var result = _transactionService.Add(transaction);
+            var result = _transactionService.Add(transaction, GetAuthenticatedUserId());
 
             if (result.HasErrors())
             {
@@ -242,7 +242,7 @@ namespace BalanceWebApp.Controllers
         
         private IEnumerable<Option> GetTransactionTypes()
         {
-            var result = _transactionTypeService.GetAll();
+            var result = _transactionTypeService.GetAll(GetAuthenticatedUserId());
 
             if (result.IsSuccess())
             {
