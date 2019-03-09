@@ -1,0 +1,32 @@
+language: csharp
+sudo: enabled
+mono: none
+dotnet: 2.0.0
+solution: BalanceWebApp.sln
+
+addons:
+  hosts:
+    - mysql-host
+  apt:
+    sources:
+      - mysql-5.7-trusty
+    packages:
+      - mysql-server
+      - mysql-client
+
+services:
+  - docker 
+
+before_install:
+  - sudo chmod +x scripts/bash/*
+  - ./Scripts/bash/prepare-build.sh
+
+jobs:
+  include:
+  - stage: "Unit Tests"
+    script:
+      - ./scripts/bash/unit-test.sh
+
+  - stage: Package
+    script:
+      - ./scripts/bash/package.sh
