@@ -4,8 +4,10 @@ using Moq;
 using BalanceWebApp.Services;
 using Microsoft.Extensions.Logging;
 using System;
+using BalanceWebApp.Model.Domain;
 
 using static BalanceWebApp.Tests.Fixture.ModelFixture;
+using System.Collections.Generic;
 
 namespace BalanceWebApp.Tests.Services
 {
@@ -55,6 +57,158 @@ namespace BalanceWebApp.Tests.Services
             _providerDaoMock.Verify(dao => dao.GetAll());
             _providerDaoMock.VerifyNoOtherCalls();
 
+        }
+
+        [Test]
+        public void GetNonExistingProviderTest()
+        {
+            var providerId = 10;
+            _providerDaoMock.Setup(dao => dao.GetById(providerId));
+
+            var result = _providerService.GetById(providerId);
+
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Provider Not Found", result.GetFailure());
+
+            _providerDaoMock.Verify(dao => dao.GetById(providerId));
+            _providerDaoMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void GetProviderThrowsExceptionTest()
+        {
+            var providerId = 10;
+            _providerDaoMock.Setup(dao => dao.GetById(providerId))
+                .Throws(new Exception("expected exception"));
+
+            var result = _providerService.GetById(providerId);
+
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Can't get the Provider", result.GetFailure());
+
+            _providerDaoMock.Verify(dao => dao.GetById(providerId));
+            _providerDaoMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void GetProviderTest()
+        {
+            var expectedProvider = BuildProvider();
+
+            _providerDaoMock.Setup(dao => dao.GetById(0))
+                .Returns(expectedProvider);
+
+            var result = _providerService.GetById(0);
+
+            Assert.True(result.IsSuccess());
+            Assert.AreEqual(expectedProvider, result.GetPayload());
+
+            _providerDaoMock.Verify(dao => dao.GetById(0));
+            _providerDaoMock.VerifyNoOtherCalls();
+        }
+        
+        [Test]
+        public void GetProvidersByCountryNotFoundTest()
+        {
+            var countryCode = "GT";
+            _providerDaoMock.Setup(dao => dao.GetByCountry(countryCode))
+                .Returns(new List<Provider>());
+
+            var result = _providerService.GetByCountry(countryCode);
+
+            Assert.True(result.IsSuccess());
+            Assert.That(result.GetPayload().Count == 0);
+
+            _providerDaoMock.Verify(dao => dao.GetByCountry(countryCode));
+            _providerDaoMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void GetProvidersByCountryThrowsException()
+        {
+            var countryCode = "GT";
+            _providerDaoMock.Setup(dao => dao.GetByCountry(countryCode))
+                .Throws(new Exception("expected exception"));
+
+            var result = _providerService.GetByCountry(countryCode);
+
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Can't get provider by selected country", result.GetFailure());
+
+            _providerDaoMock.Verify(dao => dao.GetByCountry(countryCode));
+            _providerDaoMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void GetProvidersByCountry()
+        {
+            var countryCode = "GT";
+            _providerDaoMock.Setup(dao => dao.GetByCountry(countryCode))
+                .Returns(BuildProviderList());
+
+            var result = _providerService.GetByCountry(countryCode);
+
+            Assert.True(result.IsSuccess());
+            Assert.That(result.GetPayload().Count > 0);
+
+            _providerDaoMock.Verify(dao => dao.GetByCountry(countryCode));
+            _providerDaoMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void NewExistingProvider()
+        {
+            var expectedProvider = BuildProvider();
+
+            _providerDaoMock.Setup(dao => dao.FindProvider(It.IsAny<String>(), It.IsAny<String>()))
+                .Returns(expectedProvider);
+
+            var result = _providerService.New(expectedProvider);
+
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Provider already exists", result.GetFailure());
+
+            _providerDaoMock.Verify(dao => dao.FindProvider(It.IsAny<String>(), It.IsAny<String>()));
+            _providerDaoMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void NewProviderThrowsException()
+        {
+            var expectedProvider = BuildProvider();
+
+            _providerDaoMock.Setup(dao => dao.FindProvider(It.IsAny<String>(), It.IsAny<String>()))
+                .Throws(new Exception("expected exception"));
+
+            var result = _providerService.New(expectedProvider);
+
+            Assert.True(result.HasErrors());
+            Assert.AreEqual("Can't create provider", result.GetFailure());
+
+            _providerDaoMock.Verify(dao => dao.FindProvider(It.IsAny<String>(), It.IsAny<String>()));
+            _providerDaoMock.VerifyNoOtherCalls();
+        }
+
+        [Test]
+        public void NewProvider()
+        {
+            var expectedProvider = BuildProvider();
+            _providerDaoMock.Setup(dao => dao.FindProvider(It.IsAny<String>(), It.IsAny<String>()));
+            _providerDaoMock.Setup(dao => dao.New(It.IsAny<String>(), It.IsAny<String>()))
+                .Returns(0);
+
+            _providerDaoMock.Setup(dao => dao.GetById(It.IsAny<long>()))
+                .Returns(expectedProvider);
+
+            var result = _providerService.New(expectedProvider);
+            
+            Assert.True(result.IsSuccess());
+            Assert.AreEqual(expectedProvider, result.GetPayload());
+
+            _providerDaoMock.Verify(dao => dao.FindProvider(It.IsAny<String>(), It.IsAny<String>()));
+            _providerDaoMock.Verify(dao => dao.New(It.IsAny<String>(), It.IsAny<String>()));
+            _providerDaoMock.Verify(dao => dao.GetById(It.IsAny<long>()));
+            _providerDaoMock.VerifyNoOtherCalls();
         }
     }
 }
