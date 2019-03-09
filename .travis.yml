@@ -18,7 +18,7 @@ services:
   - docker 
 
 before_install:
-  - sudo chmod +x scripts/bash/*
+  - sudo chmod +x Scripts/bash/*
   - ./Scripts/bash/prepare-build.sh
 
 jobs:
