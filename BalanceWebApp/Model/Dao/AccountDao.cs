@@ -28,7 +28,7 @@ namespace BalanceWebApp.Model.Dao
         public Account GetById(long id)
         {
             var query = "select a.id, a.account_type_id AccountTypeId, at.name AccountType, a.provider_id ProviderId, p.name Provider, " +
-                "  a.name, a.account_number AccountNumber, a.balance, p.country ProviderCountry " +
+                "  a.name, a.account_number AccountNumber, p.country ProviderCountry " +
                 " from account a " +
                 "   inner join account_type at on a.account_type_id = at.id " +
                 "   inner join provider p on a.provider_id = p.id " +
@@ -42,7 +42,7 @@ namespace BalanceWebApp.Model.Dao
         public Account GetByAccountNumber(string number, string user)
         {
             var query = "select a.id, a.account_type_id AccountTypeId, at.name AccountType, a.provider_id ProviderId, p.name Provider, " +
-                "  a.name, a.account_number AccountNumber, a.balance, p.country ProviderCountry " +
+                "  a.name, a.account_number AccountNumber, p.country ProviderCountry " +
                 " from account a " +
                 "   inner join account_type at on a.account_type_id = at.id " +
                 "   inner join provider p on a.provider_id = p.id " +
@@ -56,7 +56,7 @@ namespace BalanceWebApp.Model.Dao
         public Account GetAccount(long accountTypeId, long providerId, string accountNumber, string user)
         {
             var query = "select a.id, a.account_type_id AccountTypeId, at.name AccountType, a.provider_id ProviderId, p.name Provider, " +
-                "  a.name, a.account_number AccountNumber, a.balance, p.country ProviderCountry " +
+                "  a.name, a.account_number AccountNumber, p.country ProviderCountry " +
                 " from account a " +
                 "   inner join account_type at on a.account_type_id = at.id " +
                 "   inner join provider p on a.provider_id = p.id " +

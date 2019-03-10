@@ -27,7 +27,7 @@ namespace BalanceWebApp.Model.Dao
         {
             long id = 0;
 
-            var rows = GetConnection().Execute("insert into transaction_type (name, credit) values (@Name, @Credit, @User)",
+            var rows = GetConnection().Execute("insert into transaction_type (name, credit, tenant) values (@Name, @Credit, @User)",
                 new {transactionType.Name, transactionType.Credit, User = user });
                 
             if(rows > 0)
