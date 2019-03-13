@@ -63,5 +63,20 @@ namespace BalanceWebApp.Tests.Fixture
         {
             return new List<AccountType>() { BuildAccountType() };
         }
+
+        public static TransactionType BuildTransactionType()
+        {
+            return new TransactionType()
+            {
+                Id = CalculateRandomId(),
+                Name = "transaction type",
+                Credit = false
+            };
+        }
+
+        public static List<TransactionType> BuildTransactionTypeList()
+        {
+            return new List<TransactionType> { BuildTransactionType() };
+        }
     }
 }
